@@ -38,8 +38,11 @@ This project is developed to provide a quick and efficient disaster response sys
 
 🤝 Contributors
 Amogh
+
 Akshay
+
 Vrushabh
+
 Samarth
 
 
