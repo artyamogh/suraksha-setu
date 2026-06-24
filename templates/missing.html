@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+
+{% block title %}Find Missing Persons | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/missing.css') }}">
+{% endblock %}
+
+{% block hero %}
+<div class="missing-wrapper">
+    <header class="hero-missing">
+        <div class="container">
+            <h1><i class="fas fa-search-location"></i> Missing Persons Registry</h1>
+            <p>A centralized system to locate, report, and reunite families affected by disasters.</p>
+        </div>
+    </header>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="missing-wrapper" style="padding-bottom: 4rem;">
+    {% if total_missing and total_missing > 0 %}
+    <div class="emergency-banner-container">
+        <div class="emergency-banner">
+            <i class="fas fa-exclamation-triangle fa-lg"></i>
+            <div>
+                <strong>CRITICAL ALERT:</strong> {{ total_missing }} individuals are currently unaccounted for following recent disaster events. Any verified information is crucial.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    <div class="tabs-wrapper">
+        <div class="tabs">
+            <button class="tab active" data-tab="missing"><i class="fas fa-search me-2"></i> Registry Database</button>
+            <button class="tab" data-tab="report"><i class="fas fa-user-plus me-2"></i> File a Report</button>
+            <button class="tab" data-tab="volunteer"><i class="fas fa-hands-helping me-2"></i> Volunteer Support</button>
+        </div>
+    </div>
+
+    <!-- Missing Persons Tab -->
+    <div class="tab-content active" id="missing">
+        <div class="search-section">
+            <h2>Search Database</h2>
+            <form method="GET" action="{{ url_for('missing') }}">
+                <div class="missing-persons-grid">
+                    <div class="form-group">
+                        <label for="search-name">Full or Partial Name</label>
+                        <input type="text" id="search-name" name="name" placeholder="E.g., Rahul Sharma" value="{{ request.args.get('name', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-location">Last Known Location</label>
+                        <input type="text" id="search-location" name="location" placeholder="City, region, or landmark (e.g. Dadar, Mumbai)" value="{{ request.args.get('location', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-age">Age Range</label>
+                        <select id="search-age" name="age_range">
+                            <option value="">Any age</option>
+                            <option value="0-12" {% if request.args.get('age_range')=='0-12' %}selected{% endif %}>Child (0-12)</option>
+                            <option value="13-17" {% if request.args.get('age_range')=='13-17' %}selected{% endif %}>Teen (13-17)</option>
+                            <option value="18-59" {% if request.args.get('age_range')=='18-59' %}selected{% endif %}>Adult (18-59)</option>
+                            <option value="60+" {% if request.args.get('age_range')=='60+' %}selected{% endif %}>Senior (60+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group d-flex align-items-end">
+                        <button type="submit" class="btn-mp"><i class="fas fa-search"></i> Run Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <h2 style="text-align:center; font-weight:800; color:#0f172a; margin-bottom:2rem; font-size:1.75rem;">Active Missing Profiles</h2>
+        <div class="cards-grid" id="missing-persons-list">
+            {% if reports %}
+            {% for report in reports %}
+            <div class="person-card">
+                {% set photo_url = url_for('static', filename='uploads/' ~ report.photo) if report.photo else None %}
+                <div class="person-image-wrapper">
+                    <span class="person-status"><i class="fas fa-exclamation-circle"></i> MISSING</span>
+                    {% if photo_url %}
+                        <img src="{{ photo_url }}" class="person-image" alt="Photo of {{ report.person_name }}">
+                    {% else %}
+                        <i class="fas fa-user-alt" style="font-size: 5rem; color: #94a3b8;"></i>
+                    {% endif %}
+                </div>
+                <div class="person-details">
+                    <h3 class="person-name">{{ report.person_name }}</h3>
+                    <div class="person-meta">{{ report.age }} yrs • {{ report.gender|capitalize }}</div>
+                    <div class="last-seen">
+                        <i class="fas fa-map-marker-alt text-primary me-1"></i> <strong>Last seen:</strong> {{ report.date_last_seen }} near {{ report.last_known_location }}
+                    </div>
+                    <p class="person-desc">{{ report.physical_description }}</p>
+                    <button class="sighting-btn" data-person="{{ report.person_name }}"><i class="fas fa-eye me-2"></i> Report Sighting</button>
+                    
+                    {% set person_sightings = sightings_by_person.get(report.person_name, []) %}
+                    {% if person_sightings %}
+                    <div class="mt-3">
+                        <h6 style="font-weight: 700; color: var(--mp-primary); font-size: 0.9rem; margin-bottom: 0.5rem;"><i class="fas fa-binoculars me-1"></i> Recent Sightings</h6>
+                        <ul class="list-unstyled mb-0" style="max-height: 150px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; background: #f8fafc;">
+                            {% for s in person_sightings %}
+                            <li style="font-size: 0.8rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                                <strong>{{ s.date_time }}</strong> at {{ s.location }}<br>
+                                <span class="text-muted">{{ s.details }}</span><br>
+                                {% set s_status_colors = {'Pending Review': 'text-warning', 'Verified': 'text-success', 'Dismissed': 'text-danger'} %}
+                                {% set s_badge_class = s_status_colors.get(s.status, 'text-secondary') %}
+                                <span class="{{ s_badge_class }} fw-bold" style="font-size: 0.75rem;"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>{{ s.status }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-12 text-center" style="padding: 4rem 1rem; grid-column: 1 / -1; background: white; border-radius: 16px; border: 1px dashed #cbd5e1;">
+                <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+                <h3 style="color:#0f172a; font-weight:700;">No active reports found</h3>
+                <p class="text-muted">There are no missing person reports matching your criteria.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Report Missing Person Tab -->
+    <div class="tab-content" id="report">
+        <div class="search-section">
+            <h2>File a Missing Person Report</h2>
+            <p style="color:var(--mp-text-muted); margin-bottom:2rem;">Please provide as much accurate detail as possible to assist rescue teams.</p>
+            
+            <form id="report-form" action="{{ url_for('reports') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="missing-name">Full Legal Name</label>
+                    <input type="text" id="missing-name" name="person_name" required pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces.">
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="missing-age">Age</label>
+                        <input type="number" id="missing-age" name="age" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="missing-gender">Gender</label>
+                        <select id="missing-gender" name="gender" required>
+                            <option value="">Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="missing-location">Last Known Exact Location</label>
+                    <input type="text" id="missing-location" name="last_known_location" placeholder="Address, city, or landmark coordinates" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="missing-date">Date & Time Last Seen</label>
+                    <input type="date" id="missing-date" name="date_last_seen" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="missing-description">Detailed Physical Description</label>
+                    <textarea id="missing-description" name="physical_description" rows="3" placeholder="Height, weight, hair color, distinctive marks, clothing worn at the time..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="missing-notes">Medical & Additional Information</label>
+                    <textarea id="missing-notes" name="additional_info" rows="2" placeholder="Underlying medical conditions, required medications, special needs..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="missing-photo">Recent Photograph</label>
+                    <input type="file" id="missing-photo" name="photo" accept="image/*" style="background: white; padding: 0.5rem;">
+                </div>
+
+                <hr style="border-color: var(--mp-border); margin: 2rem 0;">
+
+                <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:1rem; color:var(--mp-primary);">Your Information (Reporter)</h3>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="reporter-name">Your Full Name</label>
+                        <input type="text" id="reporter-name" name="reporter_name" required pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces.">
+                    </div>
+                    <div class="form-group">
+                        <label for="reporter-contact">Secure Contact Info</label>
+                        <input type="text" id="reporter-contact" name="reporter_contact" placeholder="Phone or email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reporter-relation">Relationship to Missing Individual</label>
+                    <input type="text" id="reporter-relation" name="relationship_to_person" required pattern="[A-Za-z\s]+" title="Relationship should only contain letters and spaces.">
+                </div>
+
+                <button type="submit" class="btn-mp btn-mp-secondary" style="margin-top:1rem;"><i class="fas fa-file-upload"></i> Submit Official Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Volunteer Assistance Tab -->
+    <div class="tab-content" id="volunteer">
+        <div class="search-section">
+            <h2>Volunteer Deployment</h2>
+            <p style="color:var(--mp-text-muted); margin-bottom:2rem;">Join active response teams. Your skills can directly aid in locating missing individuals.</p>
+
+            <div class="cards-grid" style="padding:0;">
+                <div class="volunteer-card">
+                    <h3 class="volunteer-title">Search & Rescue Unit</h3>
+                    <div class="volunteer-location"><i class="fas fa-map-marker-alt"></i> Priority Zones</div>
+                    <p class="volunteer-desc">Assist professional emergency teams with systematic ground searches in highly affected areas.</p>
+                    <div class="volunteer-skills">
+                        <span class="skill-tag">Physical fitness</span>
+                        <span class="skill-tag">First aid</span>
+                        <span class="skill-tag">Navigation</span>
+                    </div>
+                    <button class="btn-mp volunteer-btn mt-3" data-role="Search & Rescue">Apply for Unit</button>
+                </div>
+
+                <div class="volunteer-card">
+                    <h3 class="volunteer-title">Family Support Liaison</h3>
+                    <div class="volunteer-location"><i class="fas fa-building"></i> Regional Relief Centers</div>
+                    <p class="volunteer-desc">Provide direct emotional support, communication updates, and practical assistance to waiting families.</p>
+                    <div class="volunteer-skills">
+                        <span class="skill-tag">Counseling</span>
+                        <span class="skill-tag">Empathy</span>
+                        <span class="skill-tag">Communication</span>
+                    </div>
+                    <button class="btn-mp volunteer-btn mt-3" data-role="Family Support">Apply for Role</button>
+                </div>
+
+                <div class="volunteer-card">
+                    <h3 class="volunteer-title">Data Intelligence</h3>
+                    <div class="volunteer-location"><i class="fas fa-laptop-house"></i> Virtual / Remote</div>
+                    <p class="volunteer-desc">Manage digital incoming information, process sightings, and maintain registry database integrity.</p>
+                    <div class="volunteer-skills">
+                        <span class="skill-tag">Data Entry</span>
+                        <span class="skill-tag">Organization</span>
+                        <span class="skill-tag">Analysis</span>
+                    </div>
+                    <button class="btn-mp volunteer-btn mt-3" data-role="Information Coordinator">Apply for Role</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-section mt-4">
+            <h2>General Volunteer Registry</h2>
+            <form id="volunteer-form" action="{{ url_for('volunteers') }}" method="POST">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="vol-name">Full Name</label>
+                        <input type="text" id="vol-name" name="name" required pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces.">
+                    </div>
+                    <div class="form-group">
+                        <label for="vol-email">Email Address</label>
+                        <input type="email" id="vol-email" name="email" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="vol-phone">Mobile Number</label>
+                        <input type="tel" id="vol-phone" name="phone_number" required pattern="^\+?[0-9\s\-\(\)]{10,15}$" title="Enter a valid phone number.">
+                    </div>
+                    <div class="form-group">
+                        <label for="vol-location">Current Location</label>
+                        <input type="text" id="vol-location" name="location" placeholder="City and state" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vol-skills">Core Skills & Certifications</label>
+                    <textarea id="vol-skills" name="skills" rows="3" placeholder="CPR certified, heavy machinery operation, languages spoken..." required></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="vol-availability">Time Availability</label>
+                        <select id="vol-availability" name="availability" required>
+                            <option value="">Select...</option>
+                            <option value="immediate">Immediate/24x7</option>
+                            <option value="full">Full-time (40+ hrs/week)</option>
+                            <option value="part">Part-time (10-30 hrs/week)</option>
+                            <option value="flexible">Flexible / On-call</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vol-interests">Primary Area of Interest</label>
+                        <select id="vol-interests" name="interests">
+                            <option value="search">Search & Rescue</option>
+                            <option value="support">Family Support</option>
+                            <option value="admin">Logistics/Admin</option>
+                            <option value="medical">Medical/Triage</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-mp mt-3">Register as General Volunteer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Sighting Report Modal -->
+<div class="mp-modal" id="sighting-modal">
+    <div class="mp-modal-content">
+        <div class="mp-modal-header">
+            <h3>Report Sighting: <span id="modal-person-name" style="color:var(--mp-danger);"></span></h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="mp-modal-body">
+            <form id="sighting-form" action="{{ url_for('report_sighting') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="sighting-person-name" name="person_name" value="">
+                <div class="form-group">
+                    <label for="sighting-date">Date & Time of Sighting</label>
+                    <input type="datetime-local" id="sighting-date" name="date_time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sighting-location">Exact GPS/Location Details</label>
+                    <input type="text" id="sighting-location" name="location" placeholder="Intersection, building name, or coordinates" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sighting-details">Crucial Details</label>
+                    <textarea id="sighting-details" name="details" rows="4" required placeholder="Physical condition, clothing, who they were with, direction of travel..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="sighting-contact">Your Secure Contact Info</label>
+                    <input type="text" id="sighting-contact" name="contact_info" placeholder="Phone/email (Only shared with verified rescue teams)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sighting-photo">Upload Visual Evidence</label>
+                    <input type="file" id="sighting-photo" name="photo" accept="image/*,video/*" style="background: white; padding: 0.5rem;">
+                </div>
+
+                <button type="submit" class="btn-mp" style="width:100%;">Submit Critical Intel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Volunteer Modal -->
+<div class="mp-modal" id="volunteer-modal">
+    <div class="mp-modal-content">
+        <div class="mp-modal-header">
+            <h3>Unit Deployment: <span id="modal-role-name"></span></h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="mp-modal-body">
+            <form id="specific-volunteer-form">
+                <div id="role-description" style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-size:0.9rem; color:var(--mp-text-main);">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" required pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces.">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" required pattern="^\+?[0-9\s\-\(\)]{10,15}$" title="Enter a valid phone number.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ready for Immediate 24hr Deployment?</label>
+                    <div style="display:flex; gap:1.5rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e2e8f0;">
+                        <label style="display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer;"><input type="radio" name="immediate" value="yes" style="width:auto; margin:0;"> YES</label>
+                        <label style="display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer;"><input type="radio" name="immediate" value="no" checked style="width:auto; margin:0;"> NO (Standby)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Relevant Field Experience</label>
+                    <textarea rows="3" required placeholder="Past deployments, relevant certifications..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-mp" style="width:100%;">Submit Application</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/missing.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Register for Alerts | Suraksha Setu{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4-rem">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h2 class="mb-0 fs-3">Register for Safety Alerts</h2>
+            </div>
+            <div class="card-body p-4">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                {% if message %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                placeholder="rahul@example.in">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Your Location</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input type="text" class="form-control" id="location" name="location" required
+                                placeholder="City, State (e.g. Mumbai, MH)" minlength="3">
+                        </div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center py-3 bg-light">
+                <small class="text-muted">You will receive critical alerts for your registered location.</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

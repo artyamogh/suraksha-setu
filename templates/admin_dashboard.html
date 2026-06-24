@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Suraksha Setu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-shield-alt"></i>
+                <span>Suraksha Setu</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-target="dashboard-tab"><i class="fas fa-home"></i>
+                    <span>Dashboard</span></a>
+                <a class="nav-item" data-target="users-tab"><i class="fas fa-users"></i> <span>Users</span></a>
+                <a class="nav-item" data-target="reports-tab"><i class="fas fa-file-alt"></i> <span>Reports</span></a>
+                <a class="nav-item" data-target="finance-tab"><i class="fas fa-chart-line"></i>
+                    <span>Analytics</span></a>
+                <a class="nav-item" data-target="messages-tab"><i class="fas fa-cog"></i> <span>Settings &
+                        Messages</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/" class="nav-item"><i class="fas fa-arrow-left"></i> <span>Back to Site</span></a>
+                <a href="{{ url_for('admin_logout') }}" class="nav-item text-danger-link"><i
+                        class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <main class="main-wrapper">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search across dashboard...">
+                </div>
+                <div class="top-nav-actions">
+                    
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin">
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+
+                {% if error %}
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> {{ error }}</div>
+                {% endif %}
+                {% if result %}
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ result }}</div>
+                {% endif %}
+                {% if failed_emails %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Failed to send email to some users.
+                </div>
+                {% endif %}
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard-tab" class="tab-section active">
+                    <div class="page-header">
+                        <h1>Overview</h1>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon icon-blue"><i class="fas fa-users"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-title">Total Users</span>
+                                <span class="metric-value">{{ users|length }}</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-green"><i class="fas fa-signal"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-title">Active Sessions</span>
+                                <span class="metric-value">24</span> <!-- Static dummy data for standard metric -->
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-red"><i class="fas fa-file-alt"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-title">Reports</span>
+                                <span class="metric-value">{{ incidents|length + missing_reports|length }}</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-yellow"><i class="fas fa-rupee-sign"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-title">Revenue</span>
+                                <span class="metric-value">{{ orders|length }}</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-blue"
+                                style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i
+                                    class="fas fa-box-open"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-title">Resource Reqs</span>
+                                <span class="metric-value">{{ resource_requests|length }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bento-grid">
+                        <div class="col-span-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-broadcast-tower text-danger"></i> Emergency Alert</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" id="alertForm">
+                                        <div class="form-group">
+                                            <label class="form-label">Target Location</label>
+                                            <input type="text" class="form-control" name="location"
+                                                value="{{ last_location if last_location }}" required
+                                                placeholder="Enter city or region">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Alert Message</label>
+                                            <textarea class="form-control" name="message" rows="5" required
+                                                placeholder="Enter emergency message...">{{ last_message if last_message }}</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-danger w-full"><i
+                                                class="fas fa-paper-plane"></i> Send Alert</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-bolt text-warning"></i> Recent Activity</h2>
+                                    <span class="card-badge">{{ incidents|length }} Incidents</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-container">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Location</th>
+                                                    <th>Description</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for inc in incidents[:6] %}
+                                                <tr>
+                                                    <td style="font-weight:500">{{ inc.title }}</td>
+                                                    <td>{{ inc.location }}</td>
+                                                    <td class="truncate" title="{{ inc.description }}">{{
+                                                        inc.description }}</td>
+                                                    <td style="color:var(--text-muted);font-size:0.75rem">{{
+                                                        inc.timestamp }}</td>
+                                                    <td><a href="#" onclick="switchTab('reports-tab')"
+                                                            class="btn btn-outline"
+                                                            style="padding:0.25rem 0.5rem;font-size:0.75rem">Manage</a>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="5" style="text-align:center">No activity recorded yet.
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-box-open text-info"></i> Recent Resource Requests</h2>
+                                    <span class="card-badge">{{ resource_requests|length }} Requests</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-container">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Requester</th>
+                                                    <th>Resource</th>
+                                                    <th>Location</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for req in resource_requests[:5] %}
+                                                <tr>
+                                                    <td style="font-weight:500">{{ req.requester_name }}</td>
+                                                    <td>{{ req.resource_type }} ({{ req.quantity }})</td>
+                                                    <td>{{ req.location }}</td>
+                                                    <td>
+                                                        {% set r_status_colors = {'Pending': 'status-warning', 'In
+                                                        Progress': 'status-primary', 'Fulfilled': 'status-success',
+                                                        'Rejected': 'status-danger'} %}
+                                                        <span
+                                                            class="status-badge {{ r_status_colors.get(req.status, '') }}">{{
+                                                            req.status }}</span>
+                                                    </td>
+                                                    <td><a href="#" onclick="switchTab('reports-tab')"
+                                                            class="btn btn-outline"
+                                                            style="padding:0.25rem 0.5rem;font-size:0.75rem">Manage</a>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="5" style="text-align:center">No resource requests yet.
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="users-tab" class="tab-section">
+                    <div class="page-header">
+                        <h1>Users Management</h1>
+                    </div>
+                    <div class="bento-grid" style="grid-template-rows: minmax(0, 1fr);">
+                        <div class="col-span-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-users text-primary"></i> Registered Users</h2>
+                                    <span class="card-badge">{{ users|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Email</th>
+                                                <th>Location</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                            <tr>
+                                                <td>{{ user.email }}</td>
+                                                <td>{{ user.location }}</td>
+                                                <td>
+                                                    <form action="{{ url_for('delete_user', user_id=user.id) }}"
+                                                        method="post"
+                                                        onsubmit="return confirm('Delete {{ user.email }}?');">
+                                                        <button type="submit" class="btn-icon text-danger"
+                                                            title="Delete User"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="3" style="text-align:center">No users found.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-hands-helping text-success"></i> Volunteer Apps</h2>
+                                    <span class="card-badge">{{ volunteers|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Volunteer</th>
+                                                <th>Skills</th>
+                                                <th>App Status</th>
+                                                <th>Activity</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for vol in volunteers %}
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:500">{{ vol.name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ vol.email
+                                                        }}</div>
+                                                </td>
+                                                <td>{{ vol.skills or '-' }}</td>
+                                                <td>
+                                                    {% if vol.status == 'approved' %}
+                                                    <span class="status-badge status-success">Approved</span>
+                                                    {% else %}
+                                                    <span class="status-badge status-warning">Pending</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if vol.activity_status == 'Busy' %}
+                                                    <span class="status-badge status-danger">Busy</span>
+                                                    {% else %}
+                                                    <span class="status-badge status-primary">Available</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        {% if vol.status != 'approved' %}
+                                                        <form action="{{ url_for('approve_volunteer', vol_id=vol.id) }}"
+                                                            method="post">
+                                                            <button type="submit" class="btn-icon text-success"
+                                                                title="Approve"><i class="fas fa-check"></i></button>
+                                                        </form>
+                                                        {% endif %}
+                                                        <form
+                                                            action="{{ url_for('toggle_volunteer_activity', vol_id=vol.id) }}"
+                                                            method="post">
+                                                            <button type="submit" class="btn-icon text-info"
+                                                                title="Toggle Activity"><i
+                                                                    class="fas fa-exchange-alt"></i></button>
+                                                        </form>
+                                                        <form action="{{ url_for('reject_volunteer', vol_id=vol.id) }}"
+                                                            method="post"
+                                                            onsubmit="return confirm('Reject/Delete volunteer?');">
+                                                            <button type="submit" class="btn-icon text-danger"
+                                                                title="Reject"><i class="fas fa-times"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="4" style="text-align:center">No volunteer applications.
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reports-tab" class="tab-section">
+                    <div class="page-header">
+                        <h1>Incident & Missing Person Reports</h1>
+                    </div>
+                    <div class="bento-grid">
+
+                        <!-- Incidents -->
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-exclamation-triangle text-warning"></i> Reported Incidents</h2>
+                                    <span class="card-badge">{{ incidents|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Incident Details</th>
+                                                <th>Reporter</th>
+                                                <th>Severity</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for inc in incidents %}
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600">{{ inc.title }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-map-marker-alt"></i> {{ inc.location }}</div>
+                                                    <div class="truncate" style="max-width:200px"
+                                                        title="{{ inc.description }}">{{ inc.description }}</div>
+                                                </td>
+                                                <td>
+                                                    <div style="font-weight:500">{{ inc.reporter_name or 'N/A' }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-phone"></i> {{ inc.reporter_contact or 'N/A'
+                                                        }}</div>
+                                                </td>
+                                                <td>
+                                                    <span class="status-badge"
+                                                        style="background:#f1f5f9;color:var(--text-muted)">{{
+                                                        inc.severity or 'N/A' }}</span>
+                                                </td>
+                                                <td>
+                                                    {% set status_colors = {'Pending': 'status-warning', 'In Progress':
+                                                    'status-primary', 'Resolved': 'status-success'} %}
+                                                    {% set status_class = status_colors.get(inc.status, '') %}
+                                                    <span class="status-badge {{ status_class }}">{{ inc.status
+                                                        }}</span>
+                                                </td>
+                                                <td>
+                                                    <form action="{{ url_for('update_incident', incident_id=inc.id) }}"
+                                                        method="POST"
+                                                        style="display:inline-flex; align-items:center; gap:0.5rem;">
+                                                        <select name="status" class="form-control"
+                                                            style="width:auto; padding:0.25rem; font-size:0.8rem;">
+                                                            <option value="Pending" {% if inc.status=='Pending'
+                                                                %}selected{% endif %}>Pending</option>
+                                                            <option value="In Progress" {% if inc.status=='In Progress'
+                                                                %}selected{% endif %}>In Progress</option>
+                                                            <option value="Resolved" {% if inc.status=='Resolved'
+                                                                %}selected{% endif %}>Resolved</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-primary"
+                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                    </form>
+                                                    <form action="{{ url_for('delete_incident', incident_id=inc.id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Delete this incident?');"
+                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        <button type="submit" class="btn-icon text-danger"
+                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="5" style="text-align:center">No incidents reported.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resource Requests -->
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-box-open text-info"></i> Resource Requests</h2>
+                                    <span class="card-badge">{{ resource_requests|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Requester</th>
+                                                <th>Resource Details</th>
+                                                <th>Urgency</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for req in resource_requests %}
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600">{{ req.requester_name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-address-book"></i> {{ req.contact_info }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style="font-weight:500">{{ req.resource_type }} ({{
+                                                        req.quantity }})</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-map-marker-alt"></i> {{ req.location }}</div>
+                                                </td>
+                                                <td>
+                                                    {% if req.urgency == 'High' %}
+                                                    <span class="status-badge status-danger"><i
+                                                            class="fas fa-exclamation-triangle"></i> High</span>
+                                                    {% else %}
+                                                    <span class="status-badge"
+                                                        style="background:#f1f5f9;color:var(--text-muted)">{{
+                                                        req.urgency }}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% set r_status_colors = {'Pending': 'status-warning', 'In
+                                                    Progress': 'status-primary', 'Fulfilled': 'status-success',
+                                                    'Rejected': 'status-danger'} %}
+                                                    {% set r_status_class = r_status_colors.get(req.status, '') %}
+                                                    <span class="status-badge {{ r_status_class }}">{{ req.status
+                                                        }}</span>
+                                                </td>
+                                                <td>
+                                                    <form
+                                                        action="{{ url_for('update_resource_request', request_id=req.id) }}"
+                                                        method="POST"
+                                                        style="display:inline-flex; align-items:center; gap:0.5rem;">
+                                                        <select name="status" class="form-control"
+                                                            style="width:auto; padding:0.25rem; font-size:0.8rem;">
+                                                            <option value="Pending" {% if req.status=='Pending'
+                                                                %}selected{% endif %}>Pending</option>
+                                                            <option value="In Progress" {% if req.status=='In Progress'
+                                                                %}selected{% endif %}>In Progress</option>
+                                                            <option value="Fulfilled" {% if req.status=='Fulfilled'
+                                                                %}selected{% endif %}>Fulfilled</option>
+                                                            <option value="Rejected" {% if req.status=='Rejected'
+                                                                %}selected{% endif %}>Rejected</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-primary"
+                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                    </form>
+                                                    <form
+                                                        action="{{ url_for('delete_resource_request', request_id=req.id) }}"
+                                                        method="POST" onsubmit="return confirm('Delete this request?');"
+                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        <button type="submit" class="btn-icon text-danger"
+                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="5" style="text-align:center">No resource requests.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-search text-danger"></i> Missing Person Reports</h2>
+                                    <span class="card-badge">{{ missing_reports|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Photo</th>
+                                                <th>Person Details</th>
+                                                <th>Last Seen</th>
+                                                <th>Reporter</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for report in missing_reports %}
+                                            <tr>
+                                                <td>
+                                                    {% if report.photo %}
+                                                    <img src="{{ url_for('static', filename='uploads/' + report.photo) }}"
+                                                        alt="Photo" class="avatar-img">
+                                                    {% else %}
+                                                    <div class="avatar-img"
+                                                        style="background:#e2e8f0;display:flex;align-items:center;justify-content:center">
+                                                        <i class="fas fa-user text-muted"></i></div>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div style="font-weight:600;color:var(--danger)">{{
+                                                        report.person_name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ report.age
+                                                        or '?' }} yrs / {{ report.gender or '-' }}</div>
+                                                </td>
+                                                <td>
+                                                    <div>{{ report.last_known_location }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{
+                                                        report.date_last_seen or '-' }}</div>
+                                                </td>
+                                                <td>
+                                                    <div style="font-weight:500">{{ report.reporter_name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-phone"></i> {{ report.reporter_contact }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {% if report.status == 'approved' %}
+                                                    <span class="status-badge status-success">Approved</span>
+                                                    {% else %}
+                                                    <span class="status-badge status-warning">Pending</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        {% if report.status != 'approved' %}
+                                                        <form
+                                                            action="{{ url_for('approve_report', report_id=report.id) }}"
+                                                            method="post">
+                                                            <button type="submit" class="btn-icon text-success"
+                                                                title="Approve"><i class="fas fa-check"></i></button>
+                                                        </form>
+                                                        {% endif %}
+                                                        <form
+                                                            action="{{ url_for('reject_report', report_id=report.id) }}"
+                                                            method="post"
+                                                            onsubmit="return confirm('Delete this report?');">
+                                                            <button type="submit" class="btn-icon text-danger"
+                                                                title="Delete"><i class="fas fa-trash"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="6" style="text-align:center">No missing person reports.
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-12">
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-binoculars text-info"></i> Reported Sightings</h2>
+                                    <span class="card-badge">{{ sightings|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Photo</th>
+                                                <th>Sighting Info</th>
+                                                <th>Details</th>
+                                                <th>Contact Info</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for s in sightings %}
+                                            <tr>
+                                                <td>
+                                                    {% if s.photo %}
+                                                    <img src="{{ url_for('static', filename='uploads/' + s.photo) }}"
+                                                        alt="Photo" class="avatar-img">
+                                                    {% else %}
+                                                    <div class="avatar-img"
+                                                        style="background:#e2e8f0;display:flex;align-items:center;justify-content:center">
+                                                        <i class="fas fa-camera-slash text-muted"></i></div>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div style="font-weight:600;color:var(--info)">{{ s.person_name }}
+                                                    </div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="far fa-clock"></i> {{ s.date_time }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                            class="fas fa-map-marker-alt"></i> {{ s.location }}</div>
+                                                </td>
+                                                <td>
+                                                    <div
+                                                        style="font-size:0.85rem; max-width: 250px; white-space: normal;">
+                                                        {{ s.details }}</div>
+                                                </td>
+                                                <td>
+                                                    <div style="font-size:0.85rem;"><i class="fas fa-phone"></i> {{
+                                                        s.contact_info }}</div>
+                                                </td>
+                                                <td>
+                                                    {% set s_status_colors = {'Pending Review': 'status-warning',
+                                                    'Verified': 'status-success', 'Dismissed': 'status-danger'} %}
+                                                    {% set s_badge_class = s_status_colors.get(s.status,
+                                                    'status-secondary') %}
+                                                    <span class="status-badge {{ s_badge_class }}">{{ s.status }}</span>
+                                                </td>
+                                                <td>
+                                                    <form action="{{ url_for('update_sighting', sighting_id=s.id) }}"
+                                                        method="POST"
+                                                        style="display:inline-block; margin-bottom: 0.25rem;">
+                                                        <select name="status" class="form-control"
+                                                            style="padding:0.25rem; font-size:0.8rem; display:inline-block; width:auto; border-radius:4px;">
+                                                            <option value="Pending Review" {% if
+                                                                s.status=='Pending Review' %}selected{% endif %}>Pending
+                                                                Review</option>
+                                                            <option value="Verified" {% if s.status=='Verified'
+                                                                %}selected{% endif %}>Verified</option>
+                                                            <option value="Dismissed" {% if s.status=='Dismissed'
+                                                                %}selected{% endif %}>Dismissed</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-primary"
+                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                    </form>
+                                                    <form action="{{ url_for('delete_sighting', sighting_id=s.id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Delete this sighting report?');"
+                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        <button type="submit" class="btn-icon text-danger"
+                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="6" style="text-align:center">No reported sightings.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finance Tab -->
+                <div id="finance-tab" class="tab-section">
+                    <div class="page-header">
+                        <h1>Analytics Overview</h1>
+                    </div>
+                    <div class="bento-grid">
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-shopping-bag text-primary"></i> Product Orders</h2>
+                                    <span class="card-badge">{{ orders|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Amount</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for order in orders %}
+                                            <tr>
+                                                <td style="font-weight:500">{{ order.product_name }}</td>
+                                                <td style="font-weight:600">₹{{ order.price }}</td>
+                                                <td>
+                                                    <div>{{ order.customer_name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{
+                                                        order.contact_info }}</div>
+                                                </td>
+                                                <td style="font-size:0.75rem;color:var(--text-muted)">{{ order.timestamp
+                                                    }}</td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="4" style="text-align:center">No orders.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Tab -->
+                <div id="messages-tab" class="tab-section">
+                    <div class="page-header">
+                        <h1>Settings & Messages</h1>
+                    </div>
+                    <div class="bento-grid">
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2><i class="fas fa-envelope-open-text text-primary"></i> User Messages</h2>
+                                    <span class="card-badge">{{ contact_messages|length }}</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Sender</th>
+                                                <th>Subject</th>
+                                                <th>Message</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for msg in contact_messages %}
+                                            <tr>
+                                                <td
+                                                    style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">
+                                                    {{ msg.timestamp }}</td>
+                                                <td>
+                                                    <div style="font-weight:500">{{ msg.name }}</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ msg.email
+                                                        }}</div>
+                                                </td>
+                                                <td><span class="status-badge"
+                                                        style="background:#e2e8f0;color:var(--text-main)">{{ msg.subject
+                                                        }}</span></td>
+                                                <td class="truncate" title="{{ msg.message }}">{{ msg.message }}</td>
+                                                <td>
+                                                    <button class="btn btn-outline" style="padding:0.25rem 0.75rem;font-size:0.75rem"
+                                                            data-email="{{ msg.email }}" 
+                                                            data-subject="{{ msg.subject }}"
+                                                            onclick="openReplyModal(this)">
+                                                        <i class="fas fa-reply"></i> Reply
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="5" style="text-align:center">No contact messages.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Reply Modal -->
+        <div id="replyModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-reply"></i> Reply to Message</h2>
+                    <button class="close-btn" onclick="closeReplyModal()">&times;</button>
+                </div>
+                <form action="{{ url_for('reply_message') }}" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="email" id="replyEmail">
+                        <input type="hidden" name="subject" id="replySubject">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" style="color: var(--text-muted);">To:</label>
+                            <div id="replyEmailDisplay" style="font-weight: 500;"></div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" style="color: var(--text-muted);">Subject:</label>
+                            <div id="replySubjectDisplay" style="font-weight: 500;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message:</label>
+                            <textarea name="reply_text" class="form-control" rows="6" required placeholder="Type your reply here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" onclick="closeReplyModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+    <script>
+        function openReplyModal(btn) {
+            const email = btn.getAttribute('data-email');
+            const subject = btn.getAttribute('data-subject');
+            document.getElementById('replyEmail').value = email;
+            document.getElementById('replySubject').value = subject;
+            document.getElementById('replyEmailDisplay').textContent = email;
+            document.getElementById('replySubjectDisplay').textContent = subject;
+            document.getElementById('replyModal').style.display = 'flex';
+        }
+        function closeReplyModal() {
+            document.getElementById('replyModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

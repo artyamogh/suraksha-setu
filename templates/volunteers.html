@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Join the Response Team | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/volunteers.css') }}">
+{% endblock %}
+
+{% block hero %}
+<section class="hero-volunteer">
+    <div class="container fade-in-up">
+        <h1 class="volunteer-header">Join the Response Team</h1>
+        <p class="hero-subtitle">
+            Your skills can save lives. Register as a volunteer to help your community during emergencies.
+        </p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="container volunteer-overlap">
+    <div class="row">
+        <!-- Registration Form -->
+        <div class="col-md-5 fade-in-up delay-1">
+            <div class="card register-card">
+                <div class="card-header register-header">
+                    <h3 class="m-0 text-primary"><i class="fas fa-user-plus"></i> Volunteer
+                        Registration</h3>
+                </div>
+                <div class="card-body p-4-custom">
+                    <form action="{{ url_for('volunteers') }}" method="POST">
+                        <div class="form-group">
+                            <label for="name" class="form-label-bold">Full Name</label>
+                            <input type="text" class="form-control form-control-custom" id="name" name="name" required
+                                placeholder="Rahul Sharma" minlength="2" pattern="[a-zA-Z\s]+" title="Name should only contain letters and spaces.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label-bold">Email Address</label>
+                            <input type="email" class="form-control form-control-custom" id="email" name="email"
+                                required placeholder="rahul@example.in">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone_number" class="form-label-bold">Phone Number</label>
+                            <input type="tel" class="form-control form-control-custom" id="phone_number"
+                                name="phone_number" placeholder="+91 98765 43210" required pattern="^\+?[0-9\s\-\(\)]{10,15}$" title="Enter a valid phone number.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location" class="form-label-bold">Location (City/Region)</label>
+                            <input type="text" class="form-control form-control-custom" id="location" name="location"
+                                placeholder="e.g. Mumbai, Maharashtra" required minlength="3">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills" class="form-label-bold">Skills & Certifications</label>
+                            <textarea class="form-control form-control-custom" id="skills" name="skills" rows="3"
+                                placeholder="CPR, First Aid, Search & Rescue, Medical..." required minlength="5"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="availability" class="form-label-bold">Availability</label>
+                            <select class="form-control form-control-custom" id="availability" name="availability">
+                                <option value="Weekends">Weekends Only</option>
+                                <option value="Weekdays">Weekdays</option>
+                                <option value="On-Call">On-Call (24/7)</option>
+                                <option value="Evenings">Evenings</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="interests" class="form-label-bold">Area of Interest</label>
+                            <input type="text" class="form-control form-control-custom" id="interests" name="interests"
+                                placeholder="Medical, Logistics, Rescue..." required minlength="3">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block w-100 p-3 fw-bold">
+                            Register as Volunteer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volunteers List -->
+        <div class="col-md-7 fade-in-up delay-3">
+            <div class="card register-card">
+                <div class="card-header register-header">
+                    <h3 class="m-0 text-primary d-flex align-items-center justify-content-between">
+                        <span><i class="fas fa-users"></i> Our Community</span>
+                        <span class="badge rounded-pill bg-primary fw-normal p-2 px-3">
+                            Active Volunteers
+                        </span>
+                    </h3>
+                </div>
+                <div class="card-body p-4-custom">
+                    <div class="volunteers-grid">
+                        {% if volunteers %}
+                        {% for volunteer in volunteers %}
+                        <div class="volunteer-card border shadow-none">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="volunteer-avatar">
+                                    {{ volunteer.name[0] | upper }}
+                                </div>
+                                <div>
+                                    <h5 class="m-0 fw-bold text-primary">{{ volunteer.name }}</h5>
+                                    <small class="text-muted"><i class="fas fa-map-marker-alt"></i> {{
+                                        volunteer.location or 'Unknown' }}</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="small fw-bold text-muted text-uppercase mb-1">Skills</div>
+                                <p class="small m-0 lh-base">{{ volunteer.skills or 'General Support' }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="small fw-bold text-muted text-uppercase mb-1">Contact</div>
+                                <div class="d-flex flex-column" style="gap: 6px;">
+                                    <div class="small m-0 lh-base text-truncate" title="{{ volunteer.email }}">
+                                        <i class="fas fa-envelope text-primary me-2" style="width: 14px; text-align: center;"></i>{{ volunteer.email }}
+                                    </div>
+                                    {% if volunteer.phone_number %}
+                                    <div class="small m-0 lh-base text-truncate" title="{{ volunteer.phone_number }}">
+                                        <i class="fas fa-phone text-primary me-2" style="width: 14px; text-align: center;"></i>{{ volunteer.phone_number }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center small">
+                                <div>
+                                    <span class="volunteer-badge">{{ volunteer.availability or 'On-Call' }}</span>
+                                    {% if volunteer.activity_status == 'Busy' %}
+                                    <span class="badge bg-danger ms-2 px-2 py-1" style="border-radius: var(--radius-sm); font-weight: 500;">
+                                        <i class="fas fa-ban me-1"></i>Busy
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-success ms-2 px-2 py-1" style="border-radius: var(--radius-sm); font-weight: 500;">
+                                        <i class="fas fa-check-circle me-1"></i>Available
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12 text-center p-5 bg-light rounded-3 grid-full-width">
+                            <i class="fas fa-user-friends fa-3x text-muted opacity-50 mb-3"></i>
+                            <p class="text-muted fs-5">No volunteers registered yet. Be the first!</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

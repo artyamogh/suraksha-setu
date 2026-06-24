@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}First Aid & CPR Instructions - Emergency Preparedness | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/firstaid.css') }}">
+{% endblock %}
+
+{% block hero %}
+<div class="firstaid-wrapper">
+    <header class="hero-firstaid">
+        <div class="header-content">
+            <h1>First Aid & CPR Instructions</h1>
+            <p>Step-by-step emergency procedures that could save lives</p>
+        </div>
+    </header>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="firstaid-wrapper">
+    <section class="emergency-procedures">
+        <div class="procedure-card">
+            <h2>How to Perform CPR (Adults)</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Check for Responsiveness</h3>
+                    <p>Tap the person's shoulder and shout "Are you okay?" Look for normal breathing.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Call for Help</h3>
+                    <p>If unresponsive, call emergency services (112 in India) or ask someone to call.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Begin Chest Compressions</h3>
+                    <p>Place the heel of one hand on the center of the chest. Place your other hand on top and interlock
+                        fingers. Push hard and fast (2 inches deep at 100-120 compressions per minute).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Give Rescue Breaths</h3>
+                    <p>After 30 compressions, tilt head back, lift chin, pinch nose shut, and give 2 breaths (1 second
+                        each).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Continue Until Help Arrives</h3>
+                    <p>Repeat cycles of 30 compressions and 2 breaths until emergency services take over.</p>
+                </div>
+            </div>
+
+            <div class="warning-note">
+                <p><strong>Note:</strong> For infants and children, use different techniques (see videos below).</p>
+            </div>
+        </div>
+
+        <div class="procedure-card">
+            <h2>First Aid for Choking</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Recognize Choking</h3>
+                    <p>Look for inability to talk, cough, or breathe. The person may clutch their throat.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Encourage Coughing</h3>
+                    <p>If the person can cough, encourage them to keep coughing to try to dislodge the object.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Perform Abdominal Thrusts (Heimlich Maneuver)</h3>
+                    <p>Stand behind the person. Place a fist above their navel. Grasp your fist with your other hand and
+                        give quick upward thrusts.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Continue Until Object is Expelled</h3>
+                    <p>Repeat thrusts until the object comes out or the person becomes unconscious.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="procedure-card">
+            <h2>Treating Severe Bleeding</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Apply Direct Pressure</h3>
+                    <p>Use a clean cloth or bandage to press directly on the wound.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Elevate the Wound</h3>
+                    <p>If possible, raise the injured area above heart level to reduce blood flow.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Add More Layers if Needed</h3>
+                    <p>If blood soaks through, add more cloth without removing the original dressing.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Seek Medical Help</h3>
+                    <p>For severe bleeding, call emergency services immediately after applying pressure.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section">
+        <h2>Instructional Videos</h2>
+        <p>Watch these videos to see proper techniques in action</p>
+
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/-NodDRTsV88" title="CPR Training Video" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>How to Perform CPR (Red Cross)</h3>
+                    <p>5 min 33 sec</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/7CgtIgSyAiU" title="Choking First Aid Video"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Heimlich Maneuver (Mayo Clinic)</h3>
+                    <p>2 min 10 sec</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/gn6xt1ca8A0" title="First Aid Basics" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Basic First Aid Techniques</h3>
+                    <p>15 min 22 sec</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/n65HW1iJUuY" title="Child CPR" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Infant & Child CPR</h3>
+                    <p>6 min 45 sec</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/ivmwrwwB5AM" title="Bleeding Control" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>How to Stop Severe Bleeding</h3>
+                    <p>4 min 18 sec</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/X_4b8fVdSSI" title="Burn Treatment" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>First Aid for Burns</h3>
+                    <p>3 min 52 sec</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer-note-card">
+        <p>Note: These instructions are for informational purposes only. For proper training, attend a certified first
+            aid course.</p>
+    </div>
+</div>
+{% endblock %}

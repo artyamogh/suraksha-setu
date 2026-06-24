@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Protect Your Home - Disaster Preparedness | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/protecthome.css') }}">
+{% endblock %}
+
+{% block hero %}
+<div class="protect-wrapper">
+    <header class="hero-protect">
+        <div class="header-content">
+            <h1 class="text-white">Protect Your Home</h1>
+            <p class="text-white opacity-90">Disaster-specific home protection tips to keep your family safe
+            </p>
+        </div>
+    </header>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="protect-wrapper">
+    <section class="disaster-selection">
+        <div class="disaster-card" onclick="showTips('earthquake')">
+            <i class="fas fa-house-damage"></i>
+            <h3>Earthquakes</h3>
+            <p>Seismic protection</p>
+        </div>
+
+        <div class="disaster-card" onclick="showTips('flood')">
+            <i class="fas fa-water"></i>
+            <h3>Floods</h3>
+            <p>Water damage prevention</p>
+        </div>
+
+        <div class="disaster-card" onclick="showTips('fire')">
+            <i class="fas fa-fire"></i>
+            <h3>Wildfires</h3>
+            <p>Fire safety measures</p>
+        </div>
+
+        <div class="disaster-card" onclick="showTips('hurricane')">
+            <i class="fas fa-wind"></i>
+            <h3>Hurricanes</h3>
+            <p>Storm preparation</p>
+        </div>
+
+        <div class="disaster-card" onclick="showTips('tornado')">
+            <i class="fas fa-tornado"></i>
+            <h3>Tornadoes</h3>
+            <p>Wind protection</p>
+        </div>
+    </section>
+
+    <section class="protection-tips" id="protectionTips">
+        <h2>Earthquake Protection Tips</h2>
+
+        <div class="tip-category">
+            <h3>Structural Safety</h3>
+
+            <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="tip-content">
+                    <h4>Secure Heavy Furniture</h4>
+                    <p>Anchor bookcases, cabinets, and appliances to wall studs</p>
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="tip-content">
+                    <h4>Brace Overhead Fixtures</h4>
+                    <p>Secure light fixtures, ceiling fans, and other hanging items</p>
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="tip-content">
+                    <h4>Install Latches on Cabinets</h4>
+                    <p>Prevent contents from spilling out during shaking</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-category">
+            <h3>Emergency Preparedness</h3>
+
+            <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="tip-content">
+                    <h4>Identify Safe Spots</h4>
+                    <p>Know where to take cover in each room (under sturdy furniture, against interior walls)</p>
+                </div>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="tip-content">
+                    <h4>Practice Drills</h4>
+                    <p>Conduct regular earthquake drills with all household members</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="emergency-kit">
+        <h2>Essential Home Protection Kit</h2>
+        <p>Every home should have these basic emergency supplies:</p>
+
+        <div class="kit-grid">
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Fire extinguisher (ABC type)</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Emergency water supply (1 gallon per person per day)</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>First aid kit</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Flashlights with extra batteries</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Utility shut-off tool</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Emergency radio (battery or hand-crank)</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Non-perishable food (3-day supply)</div>
+            </div>
+            <div class="kit-item">
+                <i class="fas fa-check"></i>
+                <div>Heavy-duty gloves</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="checklist">
+        <h2>Home Protection Checklist</h2>
+        <p>Mark items as you complete them:</p>
+
+        <div class="checklist-item">
+            <input type="checkbox" id="item1">
+            <label for="item1">Created family emergency plan</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item2">
+            <label for="item2">Identified safe rooms for different disasters</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item3">
+            <label for="item3">Secured heavy furniture to walls</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item4">
+            <label for="item4">Learned how to shut off utilities</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item5">
+            <label for="item5">Prepared emergency supply kits</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item6">
+            <label for="item6">Copied important documents</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" id="item7">
+            <label for="item7">Installed smoke and CO detectors</label>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/protecthome.js') }}"></script>
+{% endblock %}

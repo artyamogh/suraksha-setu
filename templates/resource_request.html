@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Request Resources | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resource_request.css') }}">
+{% endblock %}
+
+{% block hero %}
+<section class="incident-hero text-center">
+    <div class="container fade-in-up">
+        <h1 class="display-4 fw-bold mb-3"><i class="fas fa-box-open text-warning me-2" style="font-size: 0.8em; vertical-align: baseline;"></i>Request Resources</h1>
+        <p class="lead opacity-75 max-w-700 mx-auto">Request essential supplies like food, water, medical kits, and blankets. We will do our best to fulfill your request as quickly as possible.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div style="padding-bottom: 6rem; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <!-- Left Column: Form -->
+        <div class="col-lg-5 fade-in-up" style="animation-delay: 0.2s;">
+            <div class="form-card h-100">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-hand-holding-medical"></i>
+                        </div>
+                        <h4 class="mb-4" style="color: #6d28d9; font-weight: 700;">Resource Request Form</h4>
+                    </div>
+
+
+
+                    <form action="{{ url_for('resource_request') }}" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">Requester Name</label>
+                                <input type="text" class="form-control-custom w-100" name="requester_name" required placeholder="Your Full Name" minlength="2" pattern="[a-zA-Z\s]+" title="Name should only contain letters and spaces.">
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">Contact Info</label>
+                                <input type="text" class="form-control-custom w-100" name="contact_info" required placeholder="Phone or Email" minlength="5">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label-custom">Resource Type</label>
+                            <input type="text" class="form-control-custom w-100" name="resource_type" required placeholder="e.g. Food, Water, Medicine, Blankets" minlength="3">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label-custom">Quantity Needed</label>
+                            <input type="text" class="form-control-custom w-100" name="quantity" required placeholder="e.g. 5 packets, 10 liters, 2 kits" minlength="1">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label-custom">Delivery Location</label>
+                            <input type="text" class="form-control-custom w-100" name="location" required placeholder="Precise Address or Landmark" minlength="5">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label-custom">Urgency Level</label>
+                            <select class="form-control-custom w-100" name="urgency" required>
+                                <option value="" disabled selected>Select Urgency</option>
+                                <option value="Low">Low (Within 48 hours)</option>
+                                <option value="Medium">Medium (Within 24 hours)</option>
+                                <option value="High">High (Immediate Need)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="alert alert-warning border-0 bg-warning bg-opacity-10 rounded-3 mb-4">
+                            <div class="d-flex">
+                                <i class="fas fa-shield-alt text-warning mt-1 me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="text-warning fw-bold mb-1">Fulfillment Disclaimer</h6>
+                                    <p class="mb-0 small text-muted">Resources are distributed based on availability and urgency. Submitting a request does not guarantee immediate delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit w-100">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Requested Resources -->
+        <div class="col-lg-7 fade-in-up" style="animation-delay: 0.4s;">
+            <div class="form-card h-100" style="padding: 2.5rem;">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+                    <h4 class="mb-0" style="color: #6d28d9; font-weight: 700;">
+                        <i class="fas fa-list-ul me-2"></i>Recent Requests
+                    </h4>
+                    <span class="badge bg-primary rounded-pill px-3 py-2">Live Board</span>
+                </div>
+                
+                <div class="incidents-list pe-2" style="max-height: 700px; overflow-y: auto;">
+                    {% if requests %}
+                        {% for req in requests %}
+                            <div class="incident-card mb-4 p-4" style="border: 1px solid #e2e8f0; border-radius: 1rem; background: #f8fafc; transition: all 0.3s ease;">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="icon-circle" style="width: 45px; height: 45px; background: #1e293b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                            {{ req.resource_type[0] | upper }}
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1" style="color: #1e293b; font-weight: 700; font-size: 1.15rem;">{{ req.resource_type }}</h5>
+                                            <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ req.location }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 mb-2 d-block" style="border: 1px solid #e2e8f0;">
+                                            <i class="far fa-clock me-1 text-muted"></i>{{ req.created_at[:16] }}
+                                        </span>
+                                        {% set status_colors = {'Pending': 'bg-warning text-dark', 'In Progress': 'bg-primary', 'Fulfilled': 'bg-success', 'Rejected': 'bg-danger'} %}
+                                        {% set badge_class = status_colors.get(req.status, 'bg-secondary') %}
+                                        <span class="badge {{ badge_class }} rounded-pill px-3 py-1 w-100">{{ req.status }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-3 bg-white rounded-3 mt-3" style="border: 1px solid #e2e8f0;">
+                                    <div class="row">
+                                        <div class="col-6 mb-2">
+                                            <strong>Requester:</strong> <span class="text-muted">{{ req.requester_name }}</span>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <strong>Quantity:</strong> <span class="text-muted">{{ req.quantity }}</span>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <strong>Urgency:</strong> 
+                                            {% if req.urgency == 'High' %}
+                                                <span class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i>High</span>
+                                            {% else %}
+                                                <span class="text-muted">{{ req.urgency }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-box-open fa-4x mb-3 text-secondary opacity-50"></i>
+                            <h5 style="color: #475569; font-weight: 600;">No active requests</h5>
+                            <p>All communities are currently supplied.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

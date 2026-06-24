@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}About Us | Suraksha Setu{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block hero %}
+<!-- Header / Hero -->
+<header class="section about-hero">
+    <div class="container">
+        <h1 class="fade-in-up hero-title-white">About Our Mission</h1>
+        <p class="fade-in-up hero-subtitle-about">
+            Dedicated to building resilient communities through technology, collaboration, and rapid response.
+        </p>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container about-content-wrapper">
+    <section class="mission-section fade-in-up delay-2">
+        <h2>Who We Are</h2>
+        <p>We are a team of four dedicated developers committed to creating digital solutions that help communities
+            prepare for, respond to, and recover from disasters. Our comprehensive platform combines emergency alerts,
+            missing person tracking, and rescue coordination to save lives.</p>
+        <a href="#contact" class="btn btn-primary">Get In Touch</a>
+    </section>
+
+    <section class="section team-section">
+        <div class="text-center">
+            <span class="text-accent-subtitle">The Minds Behind The Mission</span>
+            <h2>Meet The Team</h2>
+        </div>
+
+        <div class="team-grid">
+            <!-- Team Member 1 -->
+            <div class="team-card">
+                <div class="team-image team-amogh"></div>
+                <div class="team-info">
+                    <h3 class="team-name">Amogh</h3>
+                    <div class="team-role">Team Leader & Architect</div>
+                    <p class="team-bio">Oversees project coordination and ensures all components work seamlessly
+                        together. Specializes in system architecture and emergency response protocols.</p>
+
+                </div>
+            </div>
+
+            <!-- Team Member 2 -->
+            <div class="team-card">
+                <div class="team-image team-samarth"></div>
+                <div class="team-info">
+                    <h3 class="team-name">Samarth</h3>
+                    <div class="team-role">UX/UI Lead</div>
+                    <p class="team-bio">Creates intuitive interfaces that work even in high-stress emergency
+                        situations. Focused on accessibility and inclusive design.</p>
+
+                </div>
+            </div>
+
+            <!-- Team Member 3 -->
+            <div class="team-card">
+                <div class="team-image team-akshay"></div>
+                <div class="team-info">
+                    <h3 class="team-name">Akshay</h3>
+                    <div class="team-role">Backend Engineer</div>
+                    <p class="team-bio">Builds the robust systems that power our emergency alerts and data
+                        management. Ensures 99.9% reliability during critical situations.</p>
+
+                </div>
+            </div>
+
+            <!-- Team Member 4 -->
+            <div class="team-card">
+                <div class="team-image team-vrushabh"></div>
+                <div class="team-info">
+                    <h3 class="team-name">Vrushabh</h3>
+                    <div class="team-role">Frontend Engineer</div>
+                    <p class="team-bio">Implements the interactive features that make our platform easy to use.
+                        Focused on performance optimization and mobile responsiveness.</p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<section class="stats-section">
+    <div class="container">
+        <h2 class="stats-title">Our Impact</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3 class="stat-number" data-target="10000">0+</h3>
+                <p>Lives Impacted</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-number" data-target="50">0+</h3>
+                <p>Communities Served</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-number" data-target="24" data-suffix="/7">24/7</h3>
+                <p>Emergency Support</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-number" data-target="4">0</h3>
+                <p>Dedicated Team Members</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section partners-section">
+    <div class="container text-center">
+        <h2>Trusted Partners</h2>
+        <div class="partners-grid">
+            <i class="fas fa-building fa-3x" title="Government Agency"></i>
+            <i class="fas fa-hospital fa-3x" title="Red Cross"></i>
+            <i class="fas fa-hand-holding-heart fa-3x" title="NGO"></i>
+            <i class="fas fa-globe-americas fa-3x" title="Global Tech"></i>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="container mb-5-custom">
+    <div class="card get-involved-card">
+        <h2>Get Involved</h2>
+        <p class="get-involved-text">Whether you're a developer wanting
+            to contribute or an organization looking to partner, we'd love to hear from you. Together we can build
+            more resilient communities.</p>
+        <div class="mt-3-custom">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                <i class="fas fa-envelope"></i> Contact Our Team
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="fas fa-paper-plane text-primary"></i> Send Us a Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('contact_team') }}" method="POST">
+                <div class="modal-body text-start">
+                    <div class="mb-3">
+                        <label for="contactName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="contactName" name="name" required
+                            pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces." minlength="2">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactSubject" class="form-label">Subject</label>
+                        <select class="form-select" id="contactSubject" name="subject">
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Partnership">Partnership Proposal</option>
+                            <option value="Technical Support">Technical Support</option>
+                            <option value="Feedback">Feedback</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="contactMessage" name="message" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/aboutus.js') }}"></script>
+{% endblock %}

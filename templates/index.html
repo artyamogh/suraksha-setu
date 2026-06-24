@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Suraksha Setu - Live Threat Dashboard{% endblock %}
+
+{% block styles %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block hero %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container fade-in-up">
+        <h1 style="color: white; font-size: 4rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">Global Threat Monitor</h1>
+        <p style="font-size: 1.25rem; font-weight: 300; opacity: 0.9; max-width: 700px; margin: 0 auto 2.5rem; text-shadow: 0 1px 5px rgba(0,0,0,0.3);">
+            Real-time disaster tracking and community response system.
+        </p>
+        <div style="display: flex; gap: 1.25rem; justify-content: center;">
+            <a href="#dashboard" class="btn btn-glow-primary btn-lg" style="padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;">
+                <i class="fas fa-map me-2"></i> View Live Map
+            </a>
+            <a href="#" class="btn btn-glow-danger btn-lg pulse-btn" onclick="triggerSOS()"
+                style="padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;">
+                <i class="fas fa-bullhorn me-2"></i> SOS ALARM
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Live Dashboard -->
+<div class="container" id="dashboard">
+    <div class="dashboard-header-row">
+        <h2 class="dashboard-title"><i class="fas fa-globe-americas"></i> Live Dashboard</h2>
+        <div class="status-chip" id="user-location-status">
+            <span class="status-dot loading"></span>
+            <span>Locating you...</span>
+        </div>
+    </div>
+
+    <div class="dashboard-container fade-in-up" style="animation-delay: 0.1s;">
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-exclamation-circle text-danger"></i> Live Alerts</h3>
+                    <span class="live-badge">Live</span>
+                </div>
+                <div class="threat-list" id="threat-list">
+                    <!-- Loaded via JS -->
+                    <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+                        <i class="fas fa-satellite-dish fa-2x mb-3" style="color: #cbd5e1; animation: pulse-dot 2s infinite;"></i>
+                        <p style="font-weight: 500;">Scanning global sensors...</p>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="map-wrapper">
+                <div id="global-map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Registration Section -->
+<section class="section bg-light" id="register-alerts" style="padding: 4rem 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-bell"></i> Stay Safe, Stay Informed
+                </h2>
+                <p class="lead text-muted mb-4">
+                    Register now to receive real-time emergency alerts for your location via Email and SMS.
+                    Be the first to know when disaster strikes.
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Instant flood & user reports
+                    </li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Safe route updates</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Community SOS signals</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                    <div class="card-body p-4 p-lg-5">
+                        <h3 class="text-center mb-4">Register for Alerts</h3>
+                        <form action="{{ url_for('register') }}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" name="email" required
+                                        placeholder="rahul@example.in">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" class="form-control" name="phone_number"
+                                        placeholder="+91 98765 43210" required pattern="^\+?[0-9\s\-\(\)]{10,15}$" title="Enter a valid phone number.">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted">Location</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-map-marker-alt"></i></span>
+                                    <input type="text" class="form-control" name="location" required
+                                        placeholder="City or Region (e.g. Pune)" minlength="3">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg shadow-sm">
+                                Subscribe to Alerts
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Access Grid -->
+<section class="section">
+    <div class="container">
+        <h2 class="text-center" style="margin-bottom: 3rem;">Emergency Resources</h2>
+        <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+
+            <a href="/missing" class="card fade-in-up quick-link-card"
+                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.1s;">
+                <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+                    <i class="fas fa-search-location"></i>
+                </div>
+                <h3>Missing Persons</h3>
+                <p style="color: var(--text-muted);">Report or search for missing individuals in disaster zones.</p>
+            </a>
+
+            <a href="/resource_request" class="card fade-in-up quick-link-card"
+                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.15s;">
+                <div style="font-size: 3rem; color: #8b5cf6; margin-bottom: 1rem;">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3>Resource Request</h3>
+                <p style="color: var(--text-muted);">Request essential supplies like food, water, and medical kits.</p>
+            </a>
+
+            <a href="/volunteers" class="card fade-in-up quick-link-card"
+                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.2s;">
+                <div style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h3>Volunteer</h3>
+                <p style="color: var(--text-muted);">Join our network of first responders and aid workers.</p>
+            </a>
+
+            <a href="/emergency" class="card fade-in-up quick-link-card"
+                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.3s;">
+                <div style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;">
+                    <i class="fas fa-first-aid"></i>
+                </div>
+                <h3>Preparedness</h3>
+                <p style="color: var(--text-muted);">Build your emergency kit and learn survival guides.</p>
+            </a>
+
+
+            <a href="{{ url_for('routes') }}" class="card fade-in-up quick-link-card"
+                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.4s;">
+                <div style="font-size: 3rem; color: var(--info); margin-bottom: 1rem;">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3>Safe Routes</h3>
+                <p style="color: var(--text-muted);">Find evacuation paths and shelter locations.</p>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- SOS Modal -->
+<div class="modal fade" id="sosModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem; overflow: hidden;">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> EMERGENCY SOS ACTIVATED</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div id="sos-spinner" class="mb-3">
+                    <div class="spinner-grow text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+                    <p class="mt-2 text-danger fw-bold">Detecting Location & Alerting Authorities...</p>
+                </div>
+
+                <div id="sos-content" style="display:none;">
+                    <h3 class="text-danger mb-3">Help is on the way!</h3>
+                    <p class="text-muted mb-4">Your live location has been shared with near-by Control Rooms.</p>
+
+                    <div class="alert alert-secondary text-start">
+                        <strong><i class="fas fa-map-marker-alt text-danger"></i> Location Detected:</strong><br>
+                        <span id="sos-location-text">Unknown</span>
+                    </div>
+
+                    <h5 class="text-start mb-3 border-bottom pb-2">Emergency Numbers (<span
+                            id="sos-country">Global</span>)</h5>
+                    <div class="d-grid gap-2" id="sos-numbers-list">
+                        <!-- Numbers injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center bg-light border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close & Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}

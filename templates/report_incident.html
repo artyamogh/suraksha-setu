@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Report an Incident | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/report_incident.css') }}">
+{% endblock %}
+
+{% block hero %}
+<section class="incident-hero text-center">
+    <div class="container fade-in-up">
+        <h1 class="display-4 fw-bold mb-3"><i class="fas fa-exclamation-circle text-warning me-2" style="font-size: 0.8em; vertical-align: baseline;"></i>Report an Incident</h1>
+        <p class="lead opacity-75 max-w-700 mx-auto">Your quick action can save lives. Please provide accurate details so our response teams can act swiftly.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div style="padding-bottom: 6rem; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <!-- Left Column: Form -->
+        <div class="col-lg-5 fade-in-up" style="animation-delay: 0.2s;">
+            <div class="form-card h-100">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4 class="mb-4" style="color: #2563eb; font-weight: 700;">Report Form</h4>
+                    </div>
+
+
+
+                    <form action="{{ url_for('report_incident') }}" method="POST">
+                        <div class="mb-4">
+                            <label class="form-label-custom">Incident Title</label>
+                            <input type="text" class="form-control-custom w-100" name="title" required placeholder="e.g. Severe Flooding" minlength="5">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label-custom">Precise Location</label>
+                            <input type="text" class="form-control-custom w-100" name="location" required placeholder="City or Specific Address" minlength="5">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label-custom">Severity</label>
+                            <select class="form-control-custom w-100" name="severity" required>
+                                <option value="" disabled selected>Select Severity Level</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">Reporter Name</label>
+                                <input type="text" class="form-control-custom w-100" name="reporter_name" required placeholder="Your Full Name" minlength="2" pattern="[a-zA-Z\s]+" title="Name should only contain letters and spaces.">
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">Reporter Contact</label>
+                                <input type="text" class="form-control-custom w-100" name="reporter_contact" required placeholder="Phone or Email" minlength="5">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label-custom">Detailed Description</label>
+                            <textarea class="form-control-custom w-100" name="description" rows="4" required placeholder="Please provide specific details: What is happening? Who is affected? Any immediate dangers?" minlength="10"></textarea>
+                        </div>
+                        
+                        <div class="alert alert-warning border-0 bg-warning bg-opacity-10 rounded-3 mb-4">
+                            <div class="d-flex">
+                                <i class="fas fa-shield-alt text-warning mt-1 me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="text-warning fw-bold mb-1">Emergency Disclaimer</h6>
+                                    <p class="mb-0 small text-muted">This form is for reporting purposes and updating the community. For life-threatening emergencies, call local emergency services.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit w-100">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Official Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Reported Incidents -->
+        <div class="col-lg-7 fade-in-up" style="animation-delay: 0.4s;">
+            <div class="form-card h-100" style="padding: 2.5rem;">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
+                    <h4 class="mb-0" style="color: #2563eb; font-weight: 700;">
+                        <i class="fas fa-list-ul me-2"></i>Reported Incidents
+                    </h4>
+                    <span class="badge bg-primary rounded-pill px-3 py-2">Live Updates</span>
+                </div>
+                
+                <div class="incidents-list pe-2" style="max-height: 700px; overflow-y: auto;">
+                    {% if incidents %}
+                        {% for incident in incidents %}
+                            <div class="incident-card mb-4 p-4" style="border: 1px solid #e2e8f0; border-radius: 1rem; background: #f8fafc; transition: all 0.3s ease;">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="icon-circle" style="width: 45px; height: 45px; background: #1e293b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                            {{ incident.title[0] | upper }}
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1" style="color: #1e293b; font-weight: 700; font-size: 1.15rem;">{{ incident.title }}</h5>
+                                            <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ incident.location }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 mb-2 d-block" style="border: 1px solid #e2e8f0;">
+                                            <i class="far fa-clock me-1 text-muted"></i>{{ incident.timestamp[:16] }}
+                                        </span>
+                                        {% set status_colors = {'Pending': 'bg-warning text-dark', 'In Progress': 'bg-primary', 'Resolved': 'bg-success'} %}
+                                        {% set badge_class = status_colors.get(incident.status, 'bg-secondary') %}
+                                        <span class="badge {{ badge_class }} rounded-pill px-3 py-1 w-100">{{ incident.status }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-3 bg-white rounded-3 mt-3" style="border: 1px solid #e2e8f0;">
+                                    <p class="mb-0" style="color: #475569; font-size: 0.95rem; line-height: 1.6;">{{ incident.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-check-circle fa-4x mb-3 text-success opacity-50"></i>
+                            <h5 style="color: #475569; font-weight: 600;">No incidents reported recently</h5>
+                            <p>Stay safe and alert. The community is secure.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

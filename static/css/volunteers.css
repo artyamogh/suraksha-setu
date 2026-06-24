@@ -1,0 +1,78 @@
+/* Volunteers Page Specific Styles */
+    .hero-volunteer {
+        background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)),
+        url("{{ url_for('static', filename='images/volunteer-hero.png') }}");
+        background-size: cover;
+        background-position: center;
+        padding: 4rem 0;
+        color: white;
+        text-align: center;
+        margin-bottom: -3rem;
+        /* Overlap effect */
+    }
+
+    .volunteer-card {
+        background: white;
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #f1f5f9;
+        transition: transform 0.2s;
+    }
+
+    .volunteer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md) !important;
+    }
+
+    .volunteers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Form Styles Override/Supplement */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label-bold {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #cbd5e1;
+        border-radius: var(--radius-sm);
+    }
+
+    .register-card {
+        border: none;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .register-header {
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+
+        .col-md-5,
+        .col-md-7 {
+            width: 100%;
+            margin-left: 0 !important;
+        }
+
+        .container-overlap {
+            margin-top: 0 !important;
+        }
+
+        .hero-volunteer {
+            margin-bottom: 0;
+        }
+    }

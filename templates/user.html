@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Disaster Alerts & Preparedness | Suraksha Setu{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+{% endblock %}
+
+{% block hero %}
+<div class="user-wrapper">
+    <header class="hero-user">
+        <div class="header-content">
+            <h1>Disaster Alerts & Preparedness</h1>
+            <span class="subtitle">Official Government Advisories for Public Safety</span>
+            <div class="last-updated">
+                <i class="fas fa-sync-alt"></i> Last Updated: <span id="update-time">Loading...</span>
+            </div>
+        </div>
+    </header>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="user-wrapper">
+    <section class="alert-container">
+        <h2 class="section-title">Active Alerts</h2>
+        <div class="alert-grid" id="alert-grid">
+            {% if alerts %}
+            {% for alert in alerts %}
+            <div class="alert-card {{ alert.severity|lower }}">
+                <div class="alert-header">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div>
+                        <div class="alert-title">Emergency Alert</div>
+                        <div class="alert-severity">{{ alert.severity|upper }}</div>
+                    </div>
+                </div>
+                <div class="alert-body">
+                    <div class="alert-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Affected Areas:</strong> {{ alert.location }}
+                        </div>
+                    </div>
+                    <div class="alert-detail">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Time:</strong> {{ alert.timestamp }}
+                        </div>
+                    </div>
+                    <div class="alert-detail">
+                        <i class="fas fa-comment-alt"></i>
+                        <div>
+                            <strong>Message:</strong> {{ alert.message }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="alert alert-info grid-full-width text-center">
+                <i class="fas fa-check-circle"></i> No active alerts at this time. Stay safe!
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="preparedness-section" id="preparedness">
+            <h2 class="section-title">Disaster Preparedness</h2>
+            <p>Be prepared for emergencies with these guidelines. Remember, your safety is our priority.</p>
+
+            <div class="preparedness-grid">
+                <div class="prep-card">
+                    <h3><i class="fas fa-home"></i> General Preparedness</h3>
+                    <ul>
+                        <li>Keep an emergency kit with food, water, and medicines</li>
+                        <li>Know evacuation routes in your area</li>
+                        <li>Have a family emergency plan</li>
+                        <li>Stay updated via official channels</li>
+                        <li>Keep important documents in a waterproof container</li>
+                    </ul>
+                </div>
+
+                <div class="prep-card">
+                    <h3><i class="fas fa-water"></i> Flood Safety</h3>
+                    <ul>
+                        <li>Do not walk or drive through floodwater</li>
+                        <li>Move to higher ground if necessary</li>
+                        <li>Turn off electricity if water enters your home</li>
+                        <li>Avoid contact with floodwater (may be contaminated)</li>
+                        <li>Disconnect electrical appliances</li>
+                    </ul>
+                </div>
+
+                <div class="prep-card">
+                    <h3><i class="fas fa-mountain"></i> Earthquake Safety</h3>
+                    <ul>
+                        <li>"Drop, Cover, and Hold On" during shaking</li>
+                        <li>Stay away from buildings and power lines</li>
+                        <li>If indoors, stay there until shaking stops</li>
+                        <li>If outdoors, move to an open area</li>
+                        <li>Be prepared for aftershocks</li>
+                    </ul>
+                </div>
+
+                <div class="prep-card">
+                    <h3><i class="fas fa-wind"></i> Cyclone Safety</h3>
+                    <ul>
+                        <li>Stay indoors, away from windows</li>
+                        <li>Use helmets for head protection</li>
+                        <li>Secure loose objects outside your home</li>
+                        <li>Stock emergency supplies for 3 days</li>
+                        <li>Follow official evacuation orders</li>
+                    </ul>
+                </div>
+
+                <div class="prep-card">
+                    <h3><i class="fas fa-fire"></i> Wildfire Safety</h3>
+                    <ul>
+                        <li>Wet your surroundings if possible</li>
+                        <li>Cover nose with a damp cloth</li>
+                        <li>Close all windows and vents</li>
+                        <li>Remove flammable materials near home</li>
+                        <li>Know multiple evacuation routes</li>
+                    </ul>
+                </div>
+
+                <div class="prep-card">
+                    <h3><i class="fas fa-bolt"></i> Power Outage</h3>
+                    <ul>
+                        <li>Use flashlights instead of candles</li>
+                        <li>Keep refrigerator closed to preserve food</li>
+                        <li>Disconnect appliances to prevent surge damage</li>
+                        <li>Have a battery-powered radio for updates</li>
+                        <li>Check on neighbors, especially elderly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="emergency-section" id="emergency-contacts">
+            <h2 class="section-title">Emergency Contacts</h2>
+            <p>In case of emergency, contact these services immediately.</p>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>National Disaster Helpline</h3>
+                    <p>108</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-ambulance"></i>
+                    <h3>Medical Emergency</h3>
+                    <p>102</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-fire-extinguisher"></i>
+                    <h3>Fire Department</h3>
+                    <p>101</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Police</h3>
+                    <p>100</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Evacuation Centers</h3>
+                    <p>See local government website</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-info-circle"></i>
+                    <h3>Weather Updates</h3>
+                    <p>www.weather.gov</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="#" class="feedback-btn">
+                    <i class="fas fa-comment-alt"></i> Provide Feedback
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/user.js') }}"></script>
+{% endblock %}

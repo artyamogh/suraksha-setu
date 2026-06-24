@@ -1,0 +1,62 @@
+/* Specific Styles for Routes Page */
+    .lift-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .lift-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .list-group-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .list-group-item:hover {
+        background-color: #f8fafc;
+    }
+
+    .list-group-item.active {
+        background-color: #f1f5f9;
+        color: var(--dark);
+        border-color: #e2e8f0;
+    }
+
+    .route-hero {
+        background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)),
+        url("{{ url_for('static', filename='images/routes-hero.png') }}");
+        background-size: cover;
+        background-position: center;
+        padding: 4rem 0;
+        color: white;
+        text-align: center;
+    }
+.search-area-btn {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: none;
+        font-weight: 600;
+        color: #0f172a;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+    .search-area-btn:hover {
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-area-btn i {
+        color: var(--primary);
+    }
