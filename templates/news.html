@@ -4,6 +4,17 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+<style>
+    .news-wrapper-container { padding: 0 1.5rem; }
+    .news-card-skeleton { height: 400px; border-color: #e2e8f0; }
+    .news-card-img-skeleton { background: #e2e8f0; }
+    .news-card-title-skeleton-90 { height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 12px; width: 90%; }
+    .news-card-title-skeleton-70 { height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 12px; width: 70%; }
+    .news-card-title-skeleton-80 { height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 24px; width: 80%; }
+    .news-card-footer-skeleton { margin-top: auto; display: flex; justify-content: space-between; }
+    .news-card-text-skeleton-30 { height: 16px; background: #e2e8f0; border-radius: 4px; width: 30%; }
+    .news-card-text-skeleton-25 { height: 16px; background: #e2e8f0; border-radius: 4px; width: 25%; }
+</style>
 {% endblock %}
 
 {% block hero %}
@@ -19,19 +30,19 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" style="padding: 0 1.5rem;">
+<div class="container news-wrapper-container">
     <div id="news-container" class="news-grid">
         <!-- Skeletons -->
         {% for i in range(6) %}
-        <div class="news-card" style="height: 400px; border-color: #e2e8f0;">
-            <div class="news-card-img-placeholder loading-pulse" style="background: #e2e8f0;"></div>
+        <div class="news-card news-card-skeleton">
+            <div class="news-card-img-placeholder loading-pulse news-card-img-skeleton"></div>
             <div class="news-card-body loading-pulse">
-                <div style="height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 12px; width: 90%;"></div>
-                <div style="height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 12px; width: 70%;"></div>
-                <div style="height: 24px; background: #e2e8f0; border-radius: 6px; margin-bottom: 24px; width: 80%;"></div>
-                <div style="margin-top: auto; display: flex; justify-content: space-between;">
-                    <div style="height: 16px; background: #e2e8f0; border-radius: 4px; width: 30%;"></div>
-                    <div style="height: 16px; background: #e2e8f0; border-radius: 4px; width: 25%;"></div>
+                <div class="news-card-title-skeleton-90"></div>
+                <div class="news-card-title-skeleton-70"></div>
+                <div class="news-card-title-skeleton-80"></div>
+                <div class="news-card-footer-skeleton">
+                    <div class="news-card-text-skeleton-30"></div>
+                    <div class="news-card-text-skeleton-25"></div>
                 </div>
             </div>
         </div>

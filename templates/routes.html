@@ -3,8 +3,8 @@
 {% block title %}Safe Routes | Suraksha Setu{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/routes.css') }}">
 {% endblock %}
 
@@ -12,7 +12,7 @@
 <!-- Hero Section -->
 <section class="hero-small route-hero">
     <div class="container fade-in-up">
-        <h1 class="hero-title">Evacuation Routes & Safe Points</h1>
+        <h1 class="hero-title">Evacuation Routes &amp; Safe Points</h1>
         <p class="hero-subtitle">
             Find nearest verified shelters, hospitals, and safe evacuation paths.
         </p>
@@ -57,7 +57,7 @@
                         </select>
                     </div>
 
-                    <button type="button" class="btn btn-primary w-100" id="find-route-btn">
+                    <button type="submit" class="btn btn-primary w-100" id="find-route-btn">
                         <i class="fas fa-directions"></i> Calculate Safest Route
                     </button>
                 </form>
@@ -71,19 +71,19 @@
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
-                    <button
+                    <button type="button"
                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active"
                         id="show-shelters">
                         <span><i class="fas fa-campground text-success"></i> Shelters</span>
                         <span class="badge bg-light text-dark">3</span>
                     </button>
-                    <button
+                    <button type="button"
                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active"
                         id="show-hospitals">
                         <span><i class="fas fa-hospital text-danger"></i> Hospitals</span>
                         <span class="badge bg-light text-dark">2</span>
                     </button>
-                    <button
+                    <button type="button"
                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active"
                         id="show-police">
                         <span><i class="fas fa-shield-alt text-primary"></i> Police</span>
@@ -160,7 +160,7 @@
 </div>
 
 <!-- Status Report Modal -->
-<div class="modal fade" id="statusReportModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="statusReportModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light">

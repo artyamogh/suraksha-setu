@@ -39,7 +39,7 @@
                 <div class="team-image team-amogh"></div>
                 <div class="team-info">
                     <h3 class="team-name">Amogh</h3>
-                    <div class="team-role">Team Leader & Architect</div>
+                    <div class="team-role">Team Leader &amp; Architect</div>
                     <p class="team-bio">Oversees project coordination and ensures all components work seamlessly
                         together. Specializes in system architecture and emergency response protocols.</p>
 
@@ -136,14 +136,14 @@
 </section>
 
 <!-- Contact Form Modal -->
-<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="contactModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light">
                 <h5 class="modal-title fw-bold"><i class="fas fa-paper-plane text-primary"></i> Send Us a Message</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ url_for('contact_team') }}" method="POST">
+            <form action="/contact_team" method="POST">
                 <div class="modal-body text-start">
                     <div class="mb-3">
                         <label for="contactName" class="form-label">Name</label>

@@ -4,6 +4,11 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/volunteers.css') }}">
+<style>
+    .volunteer-contact-list { gap: 6px; }
+    .volunteer-contact-icon { width: 14px; text-align: center; }
+    .volunteer-status-badge { border-radius: var(--radius-sm); font-weight: 500; }
+</style>
 {% endblock %}
 
 {% block hero %}
@@ -28,7 +33,7 @@
                         Registration</h3>
                 </div>
                 <div class="card-body p-4-custom">
-                    <form action="{{ url_for('volunteers') }}" method="POST">
+                    <form action="/volunteers" method="POST">
                         <div class="form-group">
                             <label for="name" class="form-label-bold">Full Name</label>
                             <input type="text" class="form-control form-control-custom" id="name" name="name" required
@@ -54,9 +59,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="skills" class="form-label-bold">Skills & Certifications</label>
+                            <label for="skills" class="form-label-bold">Skills &amp; Certifications</label>
                             <textarea class="form-control form-control-custom" id="skills" name="skills" rows="3"
-                                placeholder="CPR, First Aid, Search & Rescue, Medical..." required minlength="5"></textarea>
+                                placeholder="CPR, First Aid, Search &amp; Rescue, Medical..." required minlength="5"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -117,13 +122,13 @@
 
                             <div class="mb-3">
                                 <div class="small fw-bold text-muted text-uppercase mb-1">Contact</div>
-                                <div class="d-flex flex-column" style="gap: 6px;">
+                                <div class="d-flex flex-column volunteer-contact-list">
                                     <div class="small m-0 lh-base text-truncate" title="{{ volunteer.email }}">
-                                        <i class="fas fa-envelope text-primary me-2" style="width: 14px; text-align: center;"></i>{{ volunteer.email }}
+                                        <i class="fas fa-envelope text-primary me-2 volunteer-contact-icon"></i>{{ volunteer.email }}
                                     </div>
                                     {% if volunteer.phone_number %}
                                     <div class="small m-0 lh-base text-truncate" title="{{ volunteer.phone_number }}">
-                                        <i class="fas fa-phone text-primary me-2" style="width: 14px; text-align: center;"></i>{{ volunteer.phone_number }}
+                                        <i class="fas fa-phone text-primary me-2 volunteer-contact-icon"></i>{{ volunteer.phone_number }}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -133,11 +138,11 @@
                                 <div>
                                     <span class="volunteer-badge">{{ volunteer.availability or 'On-Call' }}</span>
                                     {% if volunteer.activity_status == 'Busy' %}
-                                    <span class="badge bg-danger ms-2 px-2 py-1" style="border-radius: var(--radius-sm); font-weight: 500;">
+                                    <span class="badge bg-danger ms-2 px-2 py-1 volunteer-status-badge">
                                         <i class="fas fa-ban me-1"></i>Busy
                                     </span>
                                     {% else %}
-                                    <span class="badge bg-success ms-2 px-2 py-1" style="border-radius: var(--radius-sm); font-weight: 500;">
+                                    <span class="badge bg-success ms-2 px-2 py-1 volunteer-status-badge">
                                         <i class="fas fa-check-circle me-1"></i>Available
                                     </span>
                                     {% endif %}

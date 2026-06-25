@@ -4,24 +4,54 @@
 
 {% block styles %}
 <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<style>
+    .hero-title-custom { color: white; font-size: 4rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .hero-desc-custom { font-size: 1.25rem; font-weight: 300; opacity: 0.9; max-width: 700px; margin: 0 auto 2.5rem; text-shadow: 0 1px 5px rgba(0,0,0,0.3); }
+    .hero-buttons-container { display: flex; gap: 1.25rem; justify-content: center; }
+    .hero-btn-size { padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; }
+    .animation-delay-100 { animation-delay: 0.1s; }
+    .threat-scanning-box { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
+    .scanning-icon { color: #cbd5e1; animation: pulse-dot 2s infinite; }
+    .scanning-text { font-weight: 500; }
+    .register-section-padding { padding: 4rem 0; }
+    .register-section-title { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+    .register-card-custom { border-radius: 1rem; }
+    .resources-section-title { margin-bottom: 3rem; }
+    .resources-grid-custom { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .quick-link-card-custom { text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; }
+    .quick-link-card-custom.delay-100 { animation-delay: 0.1s; }
+    .quick-link-card-custom.delay-150 { animation-delay: 0.15s; }
+    .quick-link-card-custom.delay-200 { animation-delay: 0.2s; }
+    .quick-link-card-custom.delay-300 { animation-delay: 0.3s; }
+    .quick-link-card-custom.delay-400 { animation-delay: 0.4s; }
+    .card-icon-custom { font-size: 3rem; margin-bottom: 1rem; }
+    .icon-accent { color: var(--accent); }
+    .icon-purple { color: #8b5cf6; }
+    .icon-success { color: var(--success); }
+    .icon-warning { color: var(--warning); }
+    .icon-info { color: var(--info); }
+    .card-desc-custom { color: var(--text-muted); }
+    .modal-content-custom { border-radius: 1rem; overflow: hidden; }
+    .sos-spinner-custom { width: 3rem; height: 3rem; }
+    .sos-content-initially-hidden { display: none; }
+</style>
 {% endblock %}
 
 {% block hero %}
 <!-- Hero Section -->
 <section class="hero">
     <div class="container fade-in-up">
-        <h1 style="color: white; font-size: 4rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">Global Threat Monitor</h1>
-        <p style="font-size: 1.25rem; font-weight: 300; opacity: 0.9; max-width: 700px; margin: 0 auto 2.5rem; text-shadow: 0 1px 5px rgba(0,0,0,0.3);">
+        <h1 class="hero-title-custom">Global Threat Monitor</h1>
+        <p class="hero-desc-custom">
             Real-time disaster tracking and community response system.
         </p>
-        <div style="display: flex; gap: 1.25rem; justify-content: center;">
-            <a href="#dashboard" class="btn btn-glow-primary btn-lg" style="padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;">
+        <div class="hero-buttons-container">
+            <a href="#dashboard" class="btn btn-glow-primary btn-lg hero-btn-size">
                 <i class="fas fa-map me-2"></i> View Live Map
             </a>
-            <a href="#" class="btn btn-glow-danger btn-lg pulse-btn" onclick="triggerSOS()"
-                style="padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;">
+            <a href="#" class="btn btn-glow-danger btn-lg pulse-btn hero-btn-size" onclick="triggerSOS()">
                 <i class="fas fa-bullhorn me-2"></i> SOS ALARM
             </a>
         </div>
@@ -40,7 +70,7 @@
         </div>
     </div>
 
-    <div class="dashboard-container fade-in-up" style="animation-delay: 0.1s;">
+    <div class="dashboard-container fade-in-up animation-delay-100">
         <div class="dashboard-layout">
             <!-- Sidebar -->
             <aside class="sidebar">
@@ -50,9 +80,9 @@
                 </div>
                 <div class="threat-list" id="threat-list">
                     <!-- Loaded via JS -->
-                    <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-                        <i class="fas fa-satellite-dish fa-2x mb-3" style="color: #cbd5e1; animation: pulse-dot 2s infinite;"></i>
-                        <p style="font-weight: 500;">Scanning global sensors...</p>
+                    <div class="threat-scanning-box">
+                        <i class="fas fa-satellite-dish fa-2x mb-3 scanning-icon"></i>
+                        <p class="scanning-text">Scanning global sensors...</p>
                     </div>
                 </div>
             </aside>
@@ -64,14 +94,12 @@
     </div>
 </div>
 
-</div>
-
 <!-- Registration Section -->
-<section class="section bg-light" id="register-alerts" style="padding: 4rem 0;">
+<section class="section bg-light register-section-padding" id="register-alerts">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <h2 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
+                <h2 class="register-section-title">
                     <i class="fas fa-bell"></i> Stay Safe, Stay Informed
                 </h2>
                 <p class="lead text-muted mb-4">
@@ -79,17 +107,17 @@
                     Be the first to know when disaster strikes.
                 </p>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Instant flood & user reports
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Instant flood &amp; user reports
                     </li>
                     <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Safe route updates</li>
                     <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Community SOS signals</li>
                 </ul>
             </div>
             <div class="col-lg-6">
-                <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card shadow-lg border-0 register-card-custom">
                     <div class="card-body p-4 p-lg-5">
                         <h3 class="text-center mb-4">Register for Alerts</h3>
-                        <form action="{{ url_for('register') }}" method="POST">
+                        <form action="/register" method="POST">
                             <div class="mb-3">
                                 <label class="form-label text-muted">Email Address</label>
                                 <div class="input-group">
@@ -128,53 +156,47 @@
 <!-- Quick Access Grid -->
 <section class="section">
     <div class="container">
-        <h2 class="text-center" style="margin-bottom: 3rem;">Emergency Resources</h2>
-        <div class="grid-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+        <h2 class="text-center resources-section-title">Emergency Resources</h2>
+        <div class="grid-container resources-grid-custom">
 
-            <a href="/missing" class="card fade-in-up quick-link-card"
-                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.1s;">
-                <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+            <a href="/missing" class="card fade-in-up quick-link-card quick-link-card-custom delay-100">
+                <div class="card-icon-custom icon-accent">
                     <i class="fas fa-search-location"></i>
                 </div>
                 <h3>Missing Persons</h3>
-                <p style="color: var(--text-muted);">Report or search for missing individuals in disaster zones.</p>
+                <p class="card-desc-custom">Report or search for missing individuals in disaster zones.</p>
             </a>
 
-            <a href="/resource_request" class="card fade-in-up quick-link-card"
-                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.15s;">
-                <div style="font-size: 3rem; color: #8b5cf6; margin-bottom: 1rem;">
+            <a href="/resource_request" class="card fade-in-up quick-link-card quick-link-card-custom delay-150">
+                <div class="card-icon-custom icon-purple">
                     <i class="fas fa-box-open"></i>
                 </div>
                 <h3>Resource Request</h3>
-                <p style="color: var(--text-muted);">Request essential supplies like food, water, and medical kits.</p>
+                <p class="card-desc-custom">Request essential supplies like food, water, and medical kits.</p>
             </a>
 
-            <a href="/volunteers" class="card fade-in-up quick-link-card"
-                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.2s;">
-                <div style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;">
+            <a href="/volunteers" class="card fade-in-up quick-link-card quick-link-card-custom delay-200">
+                <div class="card-icon-custom icon-success">
                     <i class="fas fa-hands-helping"></i>
                 </div>
                 <h3>Volunteer</h3>
-                <p style="color: var(--text-muted);">Join our network of first responders and aid workers.</p>
+                <p class="card-desc-custom">Join our network of first responders and aid workers.</p>
             </a>
 
-            <a href="/emergency" class="card fade-in-up quick-link-card"
-                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.3s;">
-                <div style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;">
+            <a href="/emergency" class="card fade-in-up quick-link-card quick-link-card-custom delay-300">
+                <div class="card-icon-custom icon-warning">
                     <i class="fas fa-first-aid"></i>
                 </div>
                 <h3>Preparedness</h3>
-                <p style="color: var(--text-muted);">Build your emergency kit and learn survival guides.</p>
+                <p class="card-desc-custom">Build your emergency kit and learn survival guides.</p>
             </a>
 
-
-            <a href="{{ url_for('routes') }}" class="card fade-in-up quick-link-card"
-                style="text-align: center; text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 400px; animation-delay: 0.4s;">
-                <div style="font-size: 3rem; color: var(--info); margin-bottom: 1rem;">
+            <a href="/routes" class="card fade-in-up quick-link-card quick-link-card-custom delay-400">
+                <div class="card-icon-custom icon-info">
                     <i class="fas fa-route"></i>
                 </div>
                 <h3>Safe Routes</h3>
-                <p style="color: var(--text-muted);">Find evacuation paths and shelter locations.</p>
+                <p class="card-desc-custom">Find evacuation paths and shelter locations.</p>
             </a>
 
         </div>
@@ -184,18 +206,18 @@
 <!-- SOS Modal -->
 <div class="modal fade" id="sosModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem; overflow: hidden;">
+        <div class="modal-content border-0 shadow-lg modal-content-custom">
             <div class="modal-header bg-danger text-white border-0">
                 <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> EMERGENCY SOS ACTIVATED</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 text-center">
                 <div id="sos-spinner" class="mb-3">
-                    <div class="spinner-grow text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
-                    <p class="mt-2 text-danger fw-bold">Detecting Location & Alerting Authorities...</p>
+                    <div class="spinner-grow text-danger sos-spinner-custom" role="status"></div>
+                    <p class="mt-2 text-danger fw-bold">Detecting Location &amp; Alerting Authorities...</p>
                 </div>
 
-                <div id="sos-content" style="display:none;">
+                <div id="sos-content" class="sos-content-initially-hidden">
                     <h3 class="text-danger mb-3">Help is on the way!</h3>
                     <p class="text-muted mb-4">Your live location has been shared with near-by Control Rooms.</p>
 
@@ -204,15 +226,14 @@
                         <span id="sos-location-text">Unknown</span>
                     </div>
 
-                    <h5 class="text-start mb-3 border-bottom pb-2">Emergency Numbers (<span
-                            id="sos-country">Global</span>)</h5>
+                    <h5 class="text-start mb-3 border-bottom pb-2">Emergency Numbers (<span id="sos-country">Global</span>)</h5>
                     <div class="d-grid gap-2" id="sos-numbers-list">
                         <!-- Numbers injected here -->
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-center bg-light border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close & Cancel</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close &amp; Cancel</button>
             </div>
         </div>
     </div>

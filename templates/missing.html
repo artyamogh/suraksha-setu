@@ -4,6 +4,32 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/missing.css') }}">
+<style>
+    .missing-wrapper-container { padding-bottom: 4rem; }
+    .missing-header-title { text-align:center; font-weight:800; color:#0f172a; margin-bottom:2rem; font-size:1.75rem; }
+    .missing-default-icon { font-size: 5rem; color: #94a3b8; }
+    .recent-sightings-header { font-weight: 700; color: var(--mp-primary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .recent-sightings-list { max-height: 150px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; background: #f8fafc; }
+    .sighting-item { font-size: 0.8rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+    .sighting-status { font-size: 0.75rem; }
+    .sighting-dot { font-size: 0.5rem; }
+    .empty-registry { padding: 4rem 1rem; grid-column: 1 / -1; background: white; border-radius: 16px; border: 1px dashed #cbd5e1; }
+    .empty-icon { font-size: 3rem; }
+    .empty-title { color:#0f172a; font-weight:700; }
+    .report-desc { color:var(--mp-text-muted); margin-bottom:2rem; }
+    .file-input-custom { background: white; padding: 0.5rem; }
+    .divider-custom { border-color: var(--mp-border); margin: 2rem 0; }
+    .reporter-title { font-size:1.25rem; font-weight:700; margin-bottom:1rem; color:var(--mp-primary); }
+    .report-submit-btn { margin-top:1rem; }
+    .volunteer-grid-card { padding:0; }
+    .modal-name-highlight { color:var(--mp-danger); }
+    .full-width { width:100%; }
+    .role-description-box { background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-size:0.9rem; color:var(--mp-text-main); }
+    .deployment-radio-group { display:flex; gap:1.5rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e2e8f0; }
+    .radio-label { display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer; }
+    .radio-input { width:auto !important; margin:0 !important; }
+    .role-desc-header { color: var(--mp-text-muted); margin-bottom: 2rem; }
+</style>
 {% endblock %}
 
 {% block hero %}
@@ -18,7 +44,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="missing-wrapper" style="padding-bottom: 4rem;">
+<div class="missing-wrapper missing-wrapper-container">
     {% if total_missing and total_missing > 0 %}
     <div class="emergency-banner-container">
         <div class="emergency-banner">
@@ -34,9 +60,9 @@
 
     <div class="tabs-wrapper">
         <div class="tabs">
-            <button class="tab active" data-tab="missing"><i class="fas fa-search me-2"></i> Registry Database</button>
-            <button class="tab" data-tab="report"><i class="fas fa-user-plus me-2"></i> File a Report</button>
-            <button class="tab" data-tab="volunteer"><i class="fas fa-hands-helping me-2"></i> Volunteer Support</button>
+            <button type="button" class="tab active" data-tab="missing"><i class="fas fa-search me-2"></i> Registry Database</button>
+            <button type="button" class="tab" data-tab="report"><i class="fas fa-user-plus me-2"></i> File a Report</button>
+            <button type="button" class="tab" data-tab="volunteer"><i class="fas fa-hands-helping me-2"></i> Volunteer Support</button>
         </div>
     </div>
 
@@ -44,7 +70,7 @@
     <div class="tab-content active" id="missing">
         <div class="search-section">
             <h2>Search Database</h2>
-            <form method="GET" action="{{ url_for('missing') }}">
+            <form method="GET" action="/missing">
                 <div class="missing-persons-grid">
                     <div class="form-group">
                         <label for="search-name">Full or Partial Name</label>
@@ -58,10 +84,26 @@
                         <label for="search-age">Age Range</label>
                         <select id="search-age" name="age_range">
                             <option value="">Any age</option>
-                            <option value="0-12" {% if request.args.get('age_range')=='0-12' %}selected{% endif %}>Child (0-12)</option>
-                            <option value="13-17" {% if request.args.get('age_range')=='13-17' %}selected{% endif %}>Teen (13-17)</option>
-                            <option value="18-59" {% if request.args.get('age_range')=='18-59' %}selected{% endif %}>Adult (18-59)</option>
-                            <option value="60+" {% if request.args.get('age_range')=='60+' %}selected{% endif %}>Senior (60+)</option>
+                            {% if request.args.get('age_range') == '0-12' %}
+                            <option value="0-12" selected>Child (0-12)</option>
+                            {% else %}
+                            <option value="0-12">Child (0-12)</option>
+                            {% endif %}
+                            {% if request.args.get('age_range') == '13-17' %}
+                            <option value="13-17" selected>Teen (13-17)</option>
+                            {% else %}
+                            <option value="13-17">Teen (13-17)</option>
+                            {% endif %}
+                            {% if request.args.get('age_range') == '18-59' %}
+                            <option value="18-59" selected>Adult (18-59)</option>
+                            {% else %}
+                            <option value="18-59">Adult (18-59)</option>
+                            {% endif %}
+                            {% if request.args.get('age_range') == '60+' %}
+                            <option value="60+" selected>Senior (60+)</option>
+                            {% else %}
+                            <option value="60+">Senior (60+)</option>
+                            {% endif %}
                         </select>
                     </div>
                     <div class="form-group d-flex align-items-end">
@@ -71,7 +113,7 @@
             </form>
         </div>
 
-        <h2 style="text-align:center; font-weight:800; color:#0f172a; margin-bottom:2rem; font-size:1.75rem;">Active Missing Profiles</h2>
+        <h2 class="missing-header-title">Active Missing Profiles</h2>
         <div class="cards-grid" id="missing-persons-list">
             {% if reports %}
             {% for report in reports %}
@@ -82,7 +124,7 @@
                     {% if photo_url %}
                         <img src="{{ photo_url }}" class="person-image" alt="Photo of {{ report.person_name }}">
                     {% else %}
-                        <i class="fas fa-user-alt" style="font-size: 5rem; color: #94a3b8;"></i>
+                        <i class="fas fa-user-alt missing-default-icon"></i>
                     {% endif %}
                 </div>
                 <div class="person-details">
@@ -92,20 +134,20 @@
                         <i class="fas fa-map-marker-alt text-primary me-1"></i> <strong>Last seen:</strong> {{ report.date_last_seen }} near {{ report.last_known_location }}
                     </div>
                     <p class="person-desc">{{ report.physical_description }}</p>
-                    <button class="sighting-btn" data-person="{{ report.person_name }}"><i class="fas fa-eye me-2"></i> Report Sighting</button>
-                    
+                    <button type="button" class="sighting-btn" data-person="{{ report.person_name }}"><i class="fas fa-eye me-2"></i> Report Sighting</button>
+
                     {% set person_sightings = sightings_by_person.get(report.person_name, []) %}
                     {% if person_sightings %}
                     <div class="mt-3">
-                        <h6 style="font-weight: 700; color: var(--mp-primary); font-size: 0.9rem; margin-bottom: 0.5rem;"><i class="fas fa-binoculars me-1"></i> Recent Sightings</h6>
-                        <ul class="list-unstyled mb-0" style="max-height: 150px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; background: #f8fafc;">
+                        <h6 class="recent-sightings-header"><i class="fas fa-binoculars me-1"></i> Recent Sightings</h6>
+                        <ul class="list-unstyled mb-0 recent-sightings-list">
                             {% for s in person_sightings %}
-                            <li style="font-size: 0.8rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                            <li class="sighting-item">
                                 <strong>{{ s.date_time }}</strong> at {{ s.location }}<br>
                                 <span class="text-muted">{{ s.details }}</span><br>
                                 {% set s_status_colors = {'Pending Review': 'text-warning', 'Verified': 'text-success', 'Dismissed': 'text-danger'} %}
                                 {% set s_badge_class = s_status_colors.get(s.status, 'text-secondary') %}
-                                <span class="{{ s_badge_class }} fw-bold" style="font-size: 0.75rem;"><i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>{{ s.status }}</span>
+                                <span class="{{ s_badge_class }} fw-bold sighting-status"><i class="fas fa-circle me-1 sighting-dot"></i>{{ s.status }}</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -115,9 +157,9 @@
             </div>
             {% endfor %}
             {% else %}
-            <div class="col-12 text-center" style="padding: 4rem 1rem; grid-column: 1 / -1; background: white; border-radius: 16px; border: 1px dashed #cbd5e1;">
-                <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
-                <h3 style="color:#0f172a; font-weight:700;">No active reports found</h3>
+            <div class="col-12 text-center empty-registry">
+                <i class="fas fa-check-circle text-success mb-3 empty-icon"></i>
+                <h3 class="empty-title">No active reports found</h3>
                 <p class="text-muted">There are no missing person reports matching your criteria.</p>
             </div>
             {% endif %}
@@ -128,9 +170,8 @@
     <div class="tab-content" id="report">
         <div class="search-section">
             <h2>File a Missing Person Report</h2>
-            <p style="color:var(--mp-text-muted); margin-bottom:2rem;">Please provide as much accurate detail as possible to assist rescue teams.</p>
-            
-            <form id="report-form" action="{{ url_for('reports') }}" method="POST" enctype="multipart/form-data">
+            <p class="report-desc">Please provide as much accurate detail as possible to assist rescue teams.</p>
+            <form id="report-form" action="/reports" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="missing-name">Full Legal Name</label>
                     <input type="text" id="missing-name" name="person_name" required pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces.">
@@ -158,7 +199,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="missing-date">Date & Time Last Seen</label>
+                    <label for="missing-date">Date &amp; Time Last Seen</label>
                     <input type="date" id="missing-date" name="date_last_seen" required>
                 </div>
 
@@ -168,19 +209,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="missing-notes">Medical & Additional Information</label>
+                    <label for="missing-notes">Medical &amp; Additional Information</label>
                     <textarea id="missing-notes" name="additional_info" rows="2" placeholder="Underlying medical conditions, required medications, special needs..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="missing-photo">Recent Photograph</label>
-                    <input type="file" id="missing-photo" name="photo" accept="image/*" style="background: white; padding: 0.5rem;">
+                    <input type="file" id="missing-photo" name="photo" accept="image/*" class="file-input-custom">
                 </div>
 
-                <hr style="border-color: var(--mp-border); margin: 2rem 0;">
+                <hr class="divider-custom">
 
-                <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:1rem; color:var(--mp-primary);">Your Information (Reporter)</h3>
-                
+                <h3 class="reporter-title">Your Information (Reporter)</h3>
+
                 <div class="grid-2">
                     <div class="form-group">
                         <label for="reporter-name">Your Full Name</label>
@@ -197,7 +238,7 @@
                     <input type="text" id="reporter-relation" name="relationship_to_person" required pattern="[A-Za-z\s]+" title="Relationship should only contain letters and spaces.">
                 </div>
 
-                <button type="submit" class="btn-mp btn-mp-secondary" style="margin-top:1rem;"><i class="fas fa-file-upload"></i> Submit Official Report</button>
+                <button type="submit" class="btn-mp btn-mp-secondary report-submit-btn"><i class="fas fa-file-upload"></i> Submit Official Report</button>
             </form>
         </div>
     </div>
@@ -206,11 +247,11 @@
     <div class="tab-content" id="volunteer">
         <div class="search-section">
             <h2>Volunteer Deployment</h2>
-            <p style="color:var(--mp-text-muted); margin-bottom:2rem;">Join active response teams. Your skills can directly aid in locating missing individuals.</p>
+            <p class="role-desc-header">Join active response teams. Your skills can directly aid in locating missing individuals.</p>
 
-            <div class="cards-grid" style="padding:0;">
+            <div class="cards-grid volunteer-grid-card">
                 <div class="volunteer-card">
-                    <h3 class="volunteer-title">Search & Rescue Unit</h3>
+                    <h3 class="volunteer-title">Search &amp; Rescue Unit</h3>
                     <div class="volunteer-location"><i class="fas fa-map-marker-alt"></i> Priority Zones</div>
                     <p class="volunteer-desc">Assist professional emergency teams with systematic ground searches in highly affected areas.</p>
                     <div class="volunteer-skills">
@@ -218,7 +259,7 @@
                         <span class="skill-tag">First aid</span>
                         <span class="skill-tag">Navigation</span>
                     </div>
-                    <button class="btn-mp volunteer-btn mt-3" data-role="Search & Rescue">Apply for Unit</button>
+                    <button type="button" class="btn-mp volunteer-btn mt-3" data-role="Search &amp; Rescue">Apply for Unit</button>
                 </div>
 
                 <div class="volunteer-card">
@@ -230,7 +271,7 @@
                         <span class="skill-tag">Empathy</span>
                         <span class="skill-tag">Communication</span>
                     </div>
-                    <button class="btn-mp volunteer-btn mt-3" data-role="Family Support">Apply for Role</button>
+                    <button type="button" class="btn-mp volunteer-btn mt-3" data-role="Family Support">Apply for Role</button>
                 </div>
 
                 <div class="volunteer-card">
@@ -242,14 +283,14 @@
                         <span class="skill-tag">Organization</span>
                         <span class="skill-tag">Analysis</span>
                     </div>
-                    <button class="btn-mp volunteer-btn mt-3" data-role="Information Coordinator">Apply for Role</button>
+                    <button type="button" class="btn-mp volunteer-btn mt-3" data-role="Information Coordinator">Apply for Role</button>
                 </div>
             </div>
         </div>
 
         <div class="search-section mt-4">
             <h2>General Volunteer Registry</h2>
-            <form id="volunteer-form" action="{{ url_for('volunteers') }}" method="POST">
+            <form id="volunteer-form" action="/volunteers" method="POST">
                 <div class="grid-2">
                     <div class="form-group">
                         <label for="vol-name">Full Name</label>
@@ -273,7 +314,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="vol-skills">Core Skills & Certifications</label>
+                    <label for="vol-skills">Core Skills &amp; Certifications</label>
                     <textarea id="vol-skills" name="skills" rows="3" placeholder="CPR certified, heavy machinery operation, languages spoken..." required></textarea>
                 </div>
 
@@ -291,7 +332,7 @@
                     <div class="form-group">
                         <label for="vol-interests">Primary Area of Interest</label>
                         <select id="vol-interests" name="interests">
-                            <option value="search">Search & Rescue</option>
+                            <option value="search">Search &amp; Rescue</option>
                             <option value="support">Family Support</option>
                             <option value="admin">Logistics/Admin</option>
                             <option value="medical">Medical/Triage</option>
@@ -309,14 +350,14 @@
 <div class="mp-modal" id="sighting-modal">
     <div class="mp-modal-content">
         <div class="mp-modal-header">
-            <h3>Report Sighting: <span id="modal-person-name" style="color:var(--mp-danger);"></span></h3>
-            <button class="close-modal">&times;</button>
+            <h3>Report Sighting: <span id="modal-person-name" class="modal-name-highlight"></span></h3>
+            <button type="button" class="close-modal">&times;</button>
         </div>
         <div class="mp-modal-body">
-            <form id="sighting-form" action="{{ url_for('report_sighting') }}" method="POST" enctype="multipart/form-data">
+            <form id="sighting-form" action="/report_sighting" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="sighting-person-name" name="person_name" value="">
                 <div class="form-group">
-                    <label for="sighting-date">Date & Time of Sighting</label>
+                    <label for="sighting-date">Date &amp; Time of Sighting</label>
                     <input type="datetime-local" id="sighting-date" name="date_time" required>
                 </div>
 
@@ -337,10 +378,10 @@
 
                 <div class="form-group">
                     <label for="sighting-photo">Upload Visual Evidence</label>
-                    <input type="file" id="sighting-photo" name="photo" accept="image/*,video/*" style="background: white; padding: 0.5rem;">
+                    <input type="file" id="sighting-photo" name="photo" accept="image/*,video/*" class="file-input-custom">
                 </div>
 
-                <button type="submit" class="btn-mp" style="width:100%;">Submit Critical Intel</button>
+                <button type="submit" class="btn-mp full-width">Submit Critical Intel</button>
             </form>
         </div>
     </div>
@@ -351,11 +392,11 @@
     <div class="mp-modal-content">
         <div class="mp-modal-header">
             <h3>Unit Deployment: <span id="modal-role-name"></span></h3>
-            <button class="close-modal">&times;</button>
+            <button type="button" class="close-modal">&times;</button>
         </div>
         <div class="mp-modal-body">
             <form id="specific-volunteer-form">
-                <div id="role-description" style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-size:0.9rem; color:var(--mp-text-main);">
+                <div id="role-description" class="role-description-box">
                     <!-- Filled by JavaScript -->
                 </div>
 
@@ -372,9 +413,9 @@
 
                 <div class="form-group">
                     <label>Ready for Immediate 24hr Deployment?</label>
-                    <div style="display:flex; gap:1.5rem; background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #e2e8f0;">
-                        <label style="display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer;"><input type="radio" name="immediate" value="yes" style="width:auto; margin:0;"> YES</label>
-                        <label style="display:flex; align-items:center; gap:0.5rem; margin:0; cursor:pointer;"><input type="radio" name="immediate" value="no" checked style="width:auto; margin:0;"> NO (Standby)</label>
+                    <div class="deployment-radio-group">
+                        <label class="radio-label"><input type="radio" name="immediate" value="yes" class="radio-input"> YES</label>
+                        <label class="radio-label"><input type="radio" name="immediate" value="no" checked class="radio-input"> NO (Standby)</label>
                     </div>
                 </div>
 
@@ -383,7 +424,7 @@
                     <textarea rows="3" required placeholder="Past deployments, relevant certifications..."></textarea>
                 </div>
 
-                <button type="submit" class="btn-mp" style="width:100%;">Submit Application</button>
+                <button type="submit" class="btn-mp full-width">Submit Application</button>
             </form>
         </div>
     </div>

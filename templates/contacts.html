@@ -2,33 +2,37 @@
 
 {% block title %}Emergency Contacts | Suraksha Setu{% endblock %}
 
-{% block content %}
-<!-- Hero Section Removed for Mobile-First Focus -->
+{% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contacts.css') }}">
+<style>
+    .contacts-container { max-width: 650px; margin: 0 auto; padding-bottom: 5rem !important; }
+    .live-update-dot { font-size: 0.5rem; vertical-align: middle; }
+</style>
+{% endblock %}
 
-<div class="container py-4 fade-in-up" style="max-width: 650px; margin: 0 auto; padding-bottom: 5rem !important;">
-    
-    <!-- 1. Top Section (Critical Actions) -->
+{% block content %}
+<!-- 1. Top Section (Critical Actions) -->
+<div class="container py-4 fade-in-up contacts-container">
     <a href="tel:102" class="critical-btn btn-ambulance">
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-ambulance fs-2"></i>
-            <span>Call Ambulance</span>
+            <span>Call&nbsp;Ambulance</span>
         </div>
         <span class="number">102</span>
     </a>
-    
+
     <a href="tel:100" class="critical-btn btn-police">
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-shield-alt fs-2"></i>
-            <span>Call Police</span>
+            <span>Call&nbsp;Police</span>
         </div>
         <span class="number">100</span>
     </a>
-    
+
     <a href="tel:101" class="critical-btn btn-fire mb-4">
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-fire-extinguisher fs-2"></i>
-            <span>Call Fire</span>
+            <span>Call&nbsp;Fire</span>
         </div>
         <span class="number">101</span>
     </a>
@@ -41,7 +45,7 @@
 
     <!-- 3. Location & Search -->
     <div class="search-card">
-        <button class="btn-location mb-3" onclick="detectLocation()" id="location-btn">
+        <button type="button" class="btn-location mb-3" onclick="detectLocation()" id="location-btn">
             <i class="fas fa-location-arrow"></i> Use My Location
         </button>
         <div class="search-input-group mb-0">
@@ -75,7 +79,7 @@
     <!-- 5. Results Section -->
     <div class="section-header mt-3">
         <h2>Nearby Services</h2>
-        <span class="last-updated"><i class="fas fa-circle text-success me-1" style="font-size: 0.5rem; vertical-align: middle;"></i> Live Update</span>
+        <span class="last-updated"><i class="fas fa-circle text-success me-1 live-update-dot"></i> Live Update</span>
     </div>
 
     <div id="results-container">

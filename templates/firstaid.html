@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}First Aid & CPR Instructions - Emergency Preparedness | Suraksha Setu{% endblock %}
+{% block title %}First Aid &amp; CPR Instructions - Emergency Preparedness | Suraksha Setu{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/firstaid.css') }}">
+<style>
+    .video-container iframe {
+        border: 0;
+    }
+</style>
 {% endblock %}
 
 {% block hero %}
 <div class="firstaid-wrapper">
     <header class="hero-firstaid">
         <div class="header-content">
-            <h1>First Aid & CPR Instructions</h1>
+            <h1>First Aid &amp; CPR Instructions</h1>
             <p>Step-by-step emergency procedures that could save lives</p>
         </div>
     </header>
@@ -151,7 +156,7 @@
         <div class="video-grid">
             <div class="video-card">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/-NodDRTsV88" title="CPR Training Video" frameborder="0"
+                    <iframe src="https://www.youtube.com/embed/-NodDRTsV88" title="CPR Training Video"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -164,7 +169,6 @@
             <div class="video-card">
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/7CgtIgSyAiU" title="Choking First Aid Video"
-                        frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -176,7 +180,7 @@
 
             <div class="video-card">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/gn6xt1ca8A0" title="First Aid Basics" frameborder="0"
+                    <iframe src="https://www.youtube.com/embed/gn6xt1ca8A0" title="First Aid Basics"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -188,19 +192,19 @@
 
             <div class="video-card">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/n65HW1iJUuY" title="Child CPR" frameborder="0"
+                    <iframe src="https://www.youtube.com/embed/n65HW1iJUuY" title="Child CPR"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
                 <div class="video-info">
-                    <h3>Infant & Child CPR</h3>
+                    <h3>Infant &amp; Child CPR</h3>
                     <p>6 min 45 sec</p>
                 </div>
             </div>
 
             <div class="video-card">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/ivmwrwwB5AM" title="Bleeding Control" frameborder="0"
+                    <iframe src="https://www.youtube.com/embed/ivmwrwwB5AM" title="Bleeding Control"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -212,7 +216,7 @@
 
             <div class="video-card">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/X_4b8fVdSSI" title="Burn Treatment" frameborder="0"
+                    <iframe src="https://www.youtube.com/embed/X_4b8fVdSSI" title="Burn Treatment"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>

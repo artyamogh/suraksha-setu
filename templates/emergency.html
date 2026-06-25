@@ -1,9 +1,41 @@
-{% extends "base.html" %}
-
-{% block title %}Emergency Preparedness - Build Your Kit | Suraksha Setu{% endblock %}
-
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emergency.css') }}">
+<style>
+    .prod-icon-wrapper { height: 180px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+    .prod-icon-blue { color: #2563eb; }
+    .prod-icon-red { color: #ef4444; }
+    .prod-icon-green { color: #10b981; }
+    .prod-icon-cyan { color: #0ea5e9; }
+    .prod-details { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .prod-title { font-weight: 700; margin-bottom: 0.5rem; }
+    .prod-desc { color: #64748b; font-size: 0.95rem; margin-bottom: auto; }
+    .prod-price { font-size: 1.5rem; font-weight: 800; margin: 1rem 0; }
+
+    .modal-backdrop-custom { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center; backdrop-filter:blur(4px); }
+    .modal-card-custom { padding: 2rem; }
+    .modal-header-custom { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+    .modal-title-custom { margin:0; font-weight:700; }
+    .modal-close-btn { background:none; border:none; font-size:1.5rem; cursor:pointer; }
+    .modal-desc-custom { color:#64748b; margin-bottom:1.5rem; }
+    .modal-input-custom { width:100%; padding:0.875rem; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem; }
+    .modal-btn-custom { width:100%; }
+    .modal-status-text { display:none; }
+    .modal-text-center { text-align: center; margin-top: 1rem; }
+
+    .modal-header-buy { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+    .modal-body-buy { text-align:center; margin-bottom:1.5rem; }
+    .modal-price-buy { color:#2563eb; margin:0; }
+    .modal-price-sub { color:#64748b; }
+    .modal-form-group { margin-bottom:1rem; }
+    .modal-form-label { display:block; margin-bottom:0.5rem; font-weight:600; }
+    .modal-form-input { width:100%; padding:0.875rem; border:1px solid #e2e8f0; border-radius:8px; }
+    .modal-form-btn { width:100%; margin-top:0.5rem; }
+
+    .modal-success-content { border-radius:16px; border:none; }
+    .modal-success-icon { font-size:4rem; color:#10b981; }
+    .modal-success-title { font-weight:800; }
+    .modal-success-desc { color:#64748b; }
+</style>
 {% endblock %}
 
 {% block hero %}
@@ -17,7 +49,7 @@
 
 {% block content %}
 <div class="emergency-wrapper saas-container">
-    
+
     <div class="dashboard-controls">
         <div class="control-card location-selector">
             <label for="location"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Target Environment</label>
@@ -51,11 +83,11 @@
     </div>
 
     <div class="saas-actions">
-        <button class="btn-saas btn-saas-secondary" onclick="window.print()">
+        <button type="button" class="btn-saas btn-saas-secondary" onclick="window.print()">
             <i class="fas fa-print"></i> Print Checklist
         </button>
-        <button class="btn-saas btn-saas-primary" onclick="openSaveModal()">
-            <i class="fas fa-save"></i> Save & Email Kit
+        <button type="button" class="btn-saas btn-saas-primary" onclick="openSaveModal()">
+            <i class="fas fa-save"></i> Save &amp; Email Kit
         </button>
     </div>
 
@@ -68,50 +100,50 @@
 
         <div class="products-grid">
             <div class="product-card">
-                <div class="product-icon-wrapper" style="height: 180px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #2563eb;">
+                <div class="prod-icon-wrapper prod-icon-blue">
                     <i class="fas fa-battery-full"></i>
                 </div>
-                <div class="product-details" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h4 style="font-weight: 700; margin-bottom: 0.5rem;">Emergency Solar Radio</h4>
-                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: auto;">Weather radio with hand crank, solar power, and USB charging.</p>
-                    <div style="font-size: 1.5rem; font-weight: 800; margin: 1rem 0;">₹2,999</div>
-                    <button class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Emergency Solar Radio', 2999)">Buy Now</button>
+                <div class="prod-details">
+                    <h4 class="prod-title">Emergency Solar Radio</h4>
+                    <p class="prod-desc">Weather radio with hand crank, solar power, and USB charging.</p>
+                    <div class="prod-price">₹2,999</div>
+                    <button type="button" class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Emergency Solar Radio', 2999)">Buy Now</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-icon-wrapper" style="height: 180px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #ef4444;">
+                <div class="prod-icon-wrapper prod-icon-red">
                     <i class="fas fa-first-aid"></i>
                 </div>
-                <div class="product-details" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h4 style="font-weight: 700; margin-bottom: 0.5rem;">Pro First Aid Kit</h4>
-                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: auto;">Comprehensive 200-piece medical kit for families.</p>
-                    <div style="font-size: 1.5rem; font-weight: 800; margin: 1rem 0;">₹1,499</div>
-                    <button class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Pro First Aid Kit', 1499)">Buy Now</button>
+                <div class="prod-details">
+                    <h4 class="prod-title">Pro First Aid Kit</h4>
+                    <p class="prod-desc">Comprehensive 200-piece medical kit for families.</p>
+                    <div class="prod-price">₹1,499</div>
+                    <button type="button" class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Pro First Aid Kit', 1499)">Buy Now</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-icon-wrapper" style="height: 180px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #10b981;">
+                <div class="prod-icon-wrapper prod-icon-green">
                     <i class="fas fa-campground"></i>
                 </div>
-                <div class="product-details" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h4 style="font-weight: 700; margin-bottom: 0.5rem;">Survival Blanket Pack</h4>
-                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: auto;">Pack of 4 heavy-duty thermal blankets to retain body heat.</p>
-                    <div style="font-size: 1.5rem; font-weight: 800; margin: 1rem 0;">₹899</div>
-                    <button class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Survival Blanket Pack', 899)">Buy Now</button>
+                <div class="prod-details">
+                    <h4 class="prod-title">Survival Blanket Pack</h4>
+                    <p class="prod-desc">Pack of 4 heavy-duty thermal blankets to retain body heat.</p>
+                    <div class="prod-price">₹899</div>
+                    <button type="button" class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Survival Blanket Pack', 899)">Buy Now</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-icon-wrapper" style="height: 180px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #0ea5e9;">
+                <div class="prod-icon-wrapper prod-icon-cyan">
                     <i class="fas fa-water"></i>
                 </div>
-                <div class="product-details" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                    <h4 style="font-weight: 700; margin-bottom: 0.5rem;">Water Purification</h4>
-                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: auto;">50 tablets - purifies up to 100 liters of water safely.</p>
-                    <div style="font-size: 1.5rem; font-weight: 800; margin: 1rem 0;">₹499</div>
-                    <button class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Water Purification Tabs', 499)">Buy Now</button>
+                <div class="prod-details">
+                    <h4 class="prod-title">Water Purification</h4>
+                    <p class="prod-desc">50 tablets - purifies up to 100 liters of water safely.</p>
+                    <div class="prod-price">₹499</div>
+                    <button type="button" class="btn-saas btn-saas-primary w-100" onclick="openBuyModal('Water Purification Tabs', 499)">Buy Now</button>
                 </div>
             </div>
         </div>
@@ -119,41 +151,41 @@
 </div>
 
 <!-- Modals -->
-<div class="modal-backdrop" id="saveKitModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
-    <div class="modal-card" style="padding:2rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-            <h3 style="margin:0; font-weight:700;">Save & Email Kit</h3>
-            <button onclick="closeSaveModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+<div class="modal-backdrop modal-backdrop-custom" id="saveKitModal">
+    <div class="modal-card modal-card-custom">
+        <div class="modal-header-custom">
+            <h3 class="modal-title-custom">Save &amp; Email Kit</h3>
+            <button type="button" onclick="closeSaveModal()" class="modal-close-btn">&times;</button>
         </div>
-        <p style="color:#64748b; margin-bottom:1.5rem;">Enter your email to receive a secure copy of your customized checklist.</p>
+        <p class="modal-desc-custom">Enter your email to receive a secure copy of your customized checklist.</p>
         <form onsubmit="emailKitList(event)">
-            <input type="email" name="email" required placeholder="name@company.com" style="width:100%; padding:0.875rem; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem;">
-            <button type="submit" class="btn-saas btn-saas-primary w-100" style="width:100%;">Send to Email</button>
+            <input type="email" name="email" required placeholder="name@company.com" class="modal-input-custom">
+            <button type="submit" class="btn-saas btn-saas-primary w-100 modal-btn-custom">Send to Email</button>
         </form>
-        <div class="text-center mt-3"><small id="saveStatus" style="display:none;"></small></div>
+        <div class="modal-text-center"><small id="saveStatus" class="modal-status-text"></small></div>
     </div>
 </div>
 
-<div class="modal-backdrop" id="buyModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
-    <div class="modal-card" style="padding:2rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-            <h3 id="modalProductName" style="margin:0; font-weight:700;">Product Name</h3>
-            <button onclick="closeBuyModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+<div class="modal-backdrop modal-backdrop-custom" id="buyModal">
+    <div class="modal-card modal-card-custom">
+        <div class="modal-header-buy">
+            <h3 id="modalProductName" class="modal-title-custom">Product Name</h3>
+            <button type="button" onclick="closeBuyModal()" class="modal-close-btn">&times;</button>
         </div>
-        <div style="text-align:center; margin-bottom:1.5rem;">
-            <h2 id="modalPrice" style="color:#2563eb; margin:0;">₹0</h2>
-            <small style="color:#64748b;">Including Taxes</small>
+        <div class="modal-body-buy">
+            <h2 id="modalPrice" class="modal-price-buy">₹0</h2>
+            <small class="modal-price-sub">Including Taxes</small>
         </div>
         <form id="purchaseForm" onsubmit="processOrder(event)">
-            <div style="margin-bottom:1rem;">
-                <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Full Name</label>
-                <input type="text" name="customerName" required placeholder="Rahul Sharma" style="width:100%; padding:0.875rem; border:1px solid #e2e8f0; border-radius:8px;">
+            <div class="modal-form-group">
+                <label class="modal-form-label">Full Name</label>
+                <input type="text" name="customerName" required placeholder="Rahul Sharma" class="modal-form-input">
             </div>
-            <div style="margin-bottom:1rem;">
-                <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Contact Info</label>
-                <input type="text" name="contactInfo" required placeholder="+91 99999 99999" style="width:100%; padding:0.875rem; border:1px solid #e2e8f0; border-radius:8px;">
+            <div class="modal-form-group">
+                <label class="modal-form-label">Contact Info</label>
+                <input type="text" name="contactInfo" required placeholder="+91 99999 99999" class="modal-form-input">
             </div>
-            <button type="submit" id="confirmBtn" class="btn-saas btn-saas-primary w-100" style="width:100%; margin-top:0.5rem;">Confirm Purchase</button>
+            <button type="submit" id="confirmBtn" class="btn-saas btn-saas-primary w-100 modal-form-btn">Confirm Purchase</button>
         </form>
     </div>
 </div>
@@ -161,11 +193,11 @@
 <!-- Success Modal (Bootstrap) -->
 <div class="modal fade" id="orderSuccessModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-5" style="border-radius:16px; border:none;">
-            <i class="fas fa-check-circle mb-3" style="font-size:4rem; color:#10b981;"></i>
-            <h3 style="font-weight:800;">Order Confirmed!</h3>
-            <p style="color:#64748b;">Thank you for securing <strong id="successProduct"></strong>. Our team will contact you shortly.</p>
-            <button class="btn-saas btn-saas-secondary mt-3" onclick="window.location.reload()">Done</button>
+        <div class="modal-content text-center p-5 modal-success-content">
+            <i class="fas fa-check-circle mb-3 modal-success-icon"></i>
+            <h3 class="modal-success-title">Order Confirmed!</h3>
+            <p class="modal-success-desc">Thank you for securing <strong id="successProduct"></strong>. Our team will contact you shortly.</p>
+            <button type="button" class="btn-saas btn-saas-secondary mt-3" onclick="window.location.reload()">Done</button>
         </div>
     </div>
 </div>

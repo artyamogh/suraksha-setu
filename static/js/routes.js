@@ -477,7 +477,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupRouting() {
-        document.getElementById('find-route-btn').onclick = () => {
+        document.getElementById('find-route-btn').onclick = (e) => {
+            if (e) e.preventDefault();
             if (!userMarker) {
                 alert("Please detect your location first.");
                 return;

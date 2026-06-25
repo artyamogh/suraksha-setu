@@ -4,35 +4,50 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/report_incident.css') }}">
+<style>
+    .incident-icon-style { font-size: 0.8em; vertical-align: baseline; }
+    .incident-wrapper-container { padding-bottom: 6rem; position: relative; z-index: 10; }
+    .animation-delay-200 { animation-delay: 0.2s; }
+    .animation-delay-400 { animation-delay: 0.4s; }
+    .blue-title-heavy { color: #2563eb; font-weight: 700; }
+    .incidents-card-wrapper { padding: 2.5rem; }
+    .incidents-card-header { border-bottom: 1px solid #e2e8f0; }
+    .incidents-scrollable-list { max-height: 700px; overflow-y: auto; }
+    .incident-item-card { border: 1px solid #e2e8f0; border-radius: 1rem; background: #f8fafc; transition: all 0.3s ease; }
+    .avatar-circle-custom { width: 45px; height: 45px; background: #1e293b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .incident-title-custom { color: #1e293b; font-weight: 700; font-size: 1.15rem; }
+    .timestamp-badge { border: 1px solid #e2e8f0; }
+    .desc-box { border: 1px solid #e2e8f0; }
+    .desc-text { color: #475569; font-size: 0.95rem; line-height: 1.6; }
+    .empty-list-title { color: #475569; font-weight: 600; }
+</style>
 {% endblock %}
 
 {% block hero %}
 <section class="incident-hero text-center">
     <div class="container fade-in-up">
-        <h1 class="display-4 fw-bold mb-3"><i class="fas fa-exclamation-circle text-warning me-2" style="font-size: 0.8em; vertical-align: baseline;"></i>Report an Incident</h1>
+        <h1 class="display-4 fw-bold mb-3"><i class="fas fa-exclamation-circle text-warning me-2 incident-icon-style"></i>Report an Incident</h1>
         <p class="lead opacity-75 max-w-700 mx-auto">Your quick action can save lives. Please provide accurate details so our response teams can act swiftly.</p>
     </div>
 </section>
 {% endblock %}
 
 {% block content %}
-<div style="padding-bottom: 6rem; position: relative; z-index: 10;">
+<div class="incident-wrapper-container">
     <div class="row g-4">
         <!-- Left Column: Form -->
-        <div class="col-lg-5 fade-in-up" style="animation-delay: 0.2s;">
+        <div class="col-lg-5 fade-in-up animation-delay-200">
             <div class="form-card h-100">
                 <div class="card-body p-4 p-md-5">
-                    
+
                     <div class="text-center">
                         <div class="icon-wrapper">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
-                        <h4 class="mb-4" style="color: #2563eb; font-weight: 700;">Report Form</h4>
+                        <h4 class="mb-4 blue-title-heavy">Report Form</h4>
                     </div>
 
-
-
-                    <form action="{{ url_for('report_incident') }}" method="POST">
+                    <form action="/report_incident" method="POST">
                         <div class="mb-4">
                             <label class="form-label-custom">Incident Title</label>
                             <input type="text" class="form-control-custom w-100" name="title" required placeholder="e.g. Severe Flooding" minlength="5">
@@ -61,12 +76,12 @@
                                 <input type="text" class="form-control-custom w-100" name="reporter_contact" required placeholder="Phone or Email" minlength="5">
                             </div>
                         </div>
-                        
+
                         <div class="mb-4">
                             <label class="form-label-custom">Detailed Description</label>
                             <textarea class="form-control-custom w-100" name="description" rows="4" required placeholder="Please provide specific details: What is happening? Who is affected? Any immediate dangers?" minlength="10"></textarea>
                         </div>
-                        
+
                         <div class="alert alert-warning border-0 bg-warning bg-opacity-10 rounded-3 mb-4">
                             <div class="d-flex">
                                 <i class="fas fa-shield-alt text-warning mt-1 me-3 fs-4"></i>
@@ -86,31 +101,31 @@
         </div>
 
         <!-- Right Column: Reported Incidents -->
-        <div class="col-lg-7 fade-in-up" style="animation-delay: 0.4s;">
-            <div class="form-card h-100" style="padding: 2.5rem;">
-                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid #e2e8f0;">
-                    <h4 class="mb-0" style="color: #2563eb; font-weight: 700;">
+        <div class="col-lg-7 fade-in-up animation-delay-400">
+            <div class="form-card h-100 incidents-card-wrapper">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 incidents-card-header">
+                    <h4 class="mb-0 blue-title-heavy">
                         <i class="fas fa-list-ul me-2"></i>Reported Incidents
                     </h4>
                     <span class="badge bg-primary rounded-pill px-3 py-2">Live Updates</span>
                 </div>
-                
-                <div class="incidents-list pe-2" style="max-height: 700px; overflow-y: auto;">
+
+                <div class="incidents-list pe-2 incidents-scrollable-list">
                     {% if incidents %}
                         {% for incident in incidents %}
-                            <div class="incident-card mb-4 p-4" style="border: 1px solid #e2e8f0; border-radius: 1rem; background: #f8fafc; transition: all 0.3s ease;">
+                            <div class="incident-card mb-4 p-4 incident-item-card">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="icon-circle" style="width: 45px; height: 45px; background: #1e293b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                        <div class="icon-circle avatar-circle-custom">
                                             {{ incident.title[0] | upper }}
                                         </div>
                                         <div>
-                                            <h5 class="mb-1" style="color: #1e293b; font-weight: 700; font-size: 1.15rem;">{{ incident.title }}</h5>
+                                            <h5 class="mb-1 incident-title-custom">{{ incident.title }}</h5>
                                             <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ incident.location }}</p>
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 mb-2 d-block" style="border: 1px solid #e2e8f0;">
+                                        <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 mb-2 d-block timestamp-badge">
                                             <i class="far fa-clock me-1 text-muted"></i>{{ incident.timestamp[:16] }}
                                         </span>
                                         {% set status_colors = {'Pending': 'bg-warning text-dark', 'In Progress': 'bg-primary', 'Resolved': 'bg-success'} %}
@@ -118,16 +133,16 @@
                                         <span class="badge {{ badge_class }} rounded-pill px-3 py-1 w-100">{{ incident.status }}</span>
                                     </div>
                                 </div>
-                                
-                                <div class="p-3 bg-white rounded-3 mt-3" style="border: 1px solid #e2e8f0;">
-                                    <p class="mb-0" style="color: #475569; font-size: 0.95rem; line-height: 1.6;">{{ incident.description }}</p>
+
+                                <div class="p-3 bg-white rounded-3 mt-3 desc-box">
+                                    <p class="mb-0 desc-text">{{ incident.description }}</p>
                                 </div>
                             </div>
                         {% endfor %}
                     {% else %}
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-check-circle fa-4x mb-3 text-success opacity-50"></i>
-                            <h5 style="color: #475569; font-weight: 600;">No incidents reported recently</h5>
+                            <h5 class="empty-list-title">No incidents reported recently</h5>
                             <p>Stay safe and alert. The community is secure.</p>
                         </div>
                     {% endif %}

@@ -8,6 +8,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    <style>
+        .purple-badge-bg { background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+        .fw-medium { font-weight: 500; }
+        .text-muted-xs { color: var(--text-muted); font-size: 0.75rem; }
+        .btn-outline-xs { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+        .text-center { text-align: center; }
+        .bento-grid-single-row { grid-template-rows: minmax(0, 1fr); }
+        .fw-semibold { font-weight: 600; }
+        .text-truncate-200 { max-width: 200px; }
+        .status-badge-gray { background: #f1f5f9; color: var(--text-muted); }
+        .incident-form-inline { display: inline-flex; align-items: center; gap: 0.5rem; }
+        .status-select-xs { width: auto; padding: 0.25rem; font-size: 0.8rem; }
+        .status-update-btn { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+        .form-inline-block { display: inline-block; margin-left: 0.25rem; }
+        .form-inline-block-margin { display: inline-block; margin-bottom: 0.25rem; }
+        .status-select-inline { padding: 0.25rem; font-size: 0.8rem; display: inline-block; width: auto; border-radius: 4px; }
+        .avatar-img-fallback { background: #e2e8f0; display: flex; align-items: center; justify-content: center; }
+        .modal-overlay-custom { display: none; }
+        .modal-form-group-margin { margin-bottom: 1rem; }
+        .modal-form-label-muted { color: var(--text-muted); }
+        .text-muted-xs-nowrap { color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
+        .text-danger-semibold { font-weight: 600; color: var(--danger); }
+        .text-info-semibold { font-weight: 600; color: var(--info); }
+        .sighting-details { font-size: 0.85rem; max-width: 250px; white-space: normal; }
+        .font-sm { font-size: 0.85rem; }
+        .subject-badge { background: #e2e8f0; color: var(--text-main); }
+        .reply-btn { padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+    </style>
 </head>
 
 <body>
@@ -25,7 +53,7 @@
                 <a class="nav-item" data-target="reports-tab"><i class="fas fa-file-alt"></i> <span>Reports</span></a>
                 <a class="nav-item" data-target="finance-tab"><i class="fas fa-chart-line"></i>
                     <span>Analytics</span></a>
-                <a class="nav-item" data-target="messages-tab"><i class="fas fa-cog"></i> <span>Settings &
+                <a class="nav-item" data-target="messages-tab"><i class="fas fa-cog"></i> <span>Settings &amp;
                         Messages</span></a>
             </nav>
             <div class="sidebar-footer">
@@ -103,8 +131,7 @@
                             </div>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-icon icon-blue"
-                                style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i
+                            <div class="metric-icon icon-blue purple-badge-bg"><i
                                     class="fas fa-box-open"></i></div>
                             <div class="metric-info">
                                 <span class="metric-title">Resource Reqs</span>
@@ -149,30 +176,29 @@
                                         <table class="data-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Title</th>
-                                                    <th>Location</th>
-                                                    <th>Description</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
+                                                    <th scope="col">Title</th>
+                                                    <th scope="col">Location</th>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for inc in incidents[:6] %}
                                                 <tr>
-                                                    <td style="font-weight:500">{{ inc.title }}</td>
+                                                    <td class="fw-medium">{{ inc.title }}</td>
                                                     <td>{{ inc.location }}</td>
                                                     <td class="truncate" title="{{ inc.description }}">{{
                                                         inc.description }}</td>
-                                                    <td style="color:var(--text-muted);font-size:0.75rem">{{
+                                                    <td class="text-muted-xs">{{
                                                         inc.timestamp }}</td>
                                                     <td><a href="#" onclick="switchTab('reports-tab')"
-                                                            class="btn btn-outline"
-                                                            style="padding:0.25rem 0.5rem;font-size:0.75rem">Manage</a>
+                                                            class="btn btn-outline btn-outline-xs">Manage</a>
                                                     </td>
                                                 </tr>
                                                 {% else %}
                                                 <tr>
-                                                    <td colspan="5" style="text-align:center">No activity recorded yet.
+                                                    <td colspan="5" class="text-center">No activity recorded yet.
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -193,17 +219,17 @@
                                         <table class="data-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Requester</th>
-                                                    <th>Resource</th>
-                                                    <th>Location</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th scope="col">Requester</th>
+                                                    <th scope="col">Resource</th>
+                                                    <th scope="col">Location</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for req in resource_requests[:5] %}
                                                 <tr>
-                                                    <td style="font-weight:500">{{ req.requester_name }}</td>
+                                                    <td class="fw-medium">{{ req.requester_name }}</td>
                                                     <td>{{ req.resource_type }} ({{ req.quantity }})</td>
                                                     <td>{{ req.location }}</td>
                                                     <td>
@@ -215,13 +241,12 @@
                                                             req.status }}</span>
                                                     </td>
                                                     <td><a href="#" onclick="switchTab('reports-tab')"
-                                                            class="btn btn-outline"
-                                                            style="padding:0.25rem 0.5rem;font-size:0.75rem">Manage</a>
+                                                            class="btn btn-outline btn-outline-xs">Manage</a>
                                                     </td>
                                                 </tr>
                                                 {% else %}
                                                 <tr>
-                                                    <td colspan="5" style="text-align:center">No resource requests yet.
+                                                    <td colspan="5" class="text-center">No resource requests yet.
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -239,7 +264,7 @@
                     <div class="page-header">
                         <h1>Users Management</h1>
                     </div>
-                    <div class="bento-grid" style="grid-template-rows: minmax(0, 1fr);">
+                    <div class="bento-grid bento-grid-single-row">
                         <div class="col-span-6">
                             <div class="card">
                                 <div class="card-header">
@@ -250,9 +275,9 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Email</th>
-                                                <th>Location</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Location</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -265,13 +290,13 @@
                                                         method="post"
                                                         onsubmit="return confirm('Delete {{ user.email }}?');">
                                                         <button type="submit" class="btn-icon text-danger"
-                                                            title="Delete User"><i class="fas fa-trash"></i></button>
+                                                            title="Delete User" aria-label="Delete User"><i class="fas fa-trash"></i></button>
                                                     </form>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="3" style="text-align:center">No users found.</td>
+                                                <td colspan="3" class="text-center">No users found.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -290,20 +315,19 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Volunteer</th>
-                                                <th>Skills</th>
-                                                <th>App Status</th>
-                                                <th>Activity</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Volunteer</th>
+                                                <th scope="col">Skills</th>
+                                                <th scope="col">App Status</th>
+                                                <th scope="col">Activity</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for vol in volunteers %}
                                             <tr>
                                                 <td>
-                                                    <div style="font-weight:500">{{ vol.name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ vol.email
-                                                        }}</div>
+                                                    <div class="fw-medium">{{ vol.name }}</div>
+                                                    <div class="text-muted-xs">{{ vol.email }}</div>
                                                 </td>
                                                 <td>{{ vol.skills or '-' }}</td>
                                                 <td>
@@ -326,29 +350,28 @@
                                                         <form action="{{ url_for('approve_volunteer', vol_id=vol.id) }}"
                                                             method="post">
                                                             <button type="submit" class="btn-icon text-success"
-                                                                title="Approve"><i class="fas fa-check"></i></button>
+                                                                title="Approve" aria-label="Approve"><i class="fas fa-check"></i></button>
                                                         </form>
                                                         {% endif %}
                                                         <form
                                                             action="{{ url_for('toggle_volunteer_activity', vol_id=vol.id) }}"
                                                             method="post">
                                                             <button type="submit" class="btn-icon text-info"
-                                                                title="Toggle Activity"><i
+                                                                title="Toggle Activity" aria-label="Toggle Activity"><i
                                                                     class="fas fa-exchange-alt"></i></button>
                                                         </form>
                                                         <form action="{{ url_for('reject_volunteer', vol_id=vol.id) }}"
                                                             method="post"
                                                             onsubmit="return confirm('Reject/Delete volunteer?');">
                                                             <button type="submit" class="btn-icon text-danger"
-                                                                title="Reject"><i class="fas fa-times"></i></button>
+                                                                title="Reject" aria-label="Reject"><i class="fas fa-times"></i></button>
                                                         </form>
                                                     </div>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="4" style="text-align:center">No volunteer applications.
-                                                </td>
+                                                <td colspan="5" class="text-center">No volunteer applications.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -377,32 +400,31 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Incident Details</th>
-                                                <th>Reporter</th>
-                                                <th>Severity</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
+                                                <th scope="col">Incident Details</th>
+                                                <th scope="col">Reporter</th>
+                                                <th scope="col">Severity</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for inc in incidents %}
                                             <tr>
                                                 <td>
-                                                    <div style="font-weight:600">{{ inc.title }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="fw-semibold">{{ inc.title }}</div>
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-map-marker-alt"></i> {{ inc.location }}</div>
-                                                    <div class="truncate" style="max-width:200px"
+                                                    <div class="truncate text-truncate-200"
                                                         title="{{ inc.description }}">{{ inc.description }}</div>
                                                 </td>
                                                 <td>
-                                                    <div style="font-weight:500">{{ inc.reporter_name or 'N/A' }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="fw-medium">{{ inc.reporter_name or 'N/A' }}</div>
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-phone"></i> {{ inc.reporter_contact or 'N/A'
                                                         }}</div>
                                                 </td>
                                                 <td>
-                                                    <span class="status-badge"
-                                                        style="background:#f1f5f9;color:var(--text-muted)">{{
+                                                    <span class="status-badge status-badge-gray">{{
                                                         inc.severity or 'N/A' }}</span>
                                                 </td>
                                                 <td>
@@ -415,31 +437,38 @@
                                                 <td>
                                                     <form action="{{ url_for('update_incident', incident_id=inc.id) }}"
                                                         method="POST"
-                                                        style="display:inline-flex; align-items:center; gap:0.5rem;">
-                                                        <select name="status" class="form-control"
-                                                            style="width:auto; padding:0.25rem; font-size:0.8rem;">
-                                                            <option value="Pending" {% if inc.status=='Pending'
-                                                                %}selected{% endif %}>Pending</option>
-                                                            <option value="In Progress" {% if inc.status=='In Progress'
-                                                                %}selected{% endif %}>In Progress</option>
-                                                            <option value="Resolved" {% if inc.status=='Resolved'
-                                                                %}selected{% endif %}>Resolved</option>
+                                                        class="incident-form-inline">
+                                                        <select name="status" class="form-control status-select-inline">
+                                                            {% if inc.status=='Pending' %}
+                                                            <option value="Pending" selected>Pending</option>
+                                                            {% else %}
+                                                            <option value="Pending">Pending</option>
+                                                            {% endif %}
+                                                            {% if inc.status=='In Progress' %}
+                                                            <option value="In Progress" selected>In Progress</option>
+                                                            {% else %}
+                                                            <option value="In Progress">In Progress</option>
+                                                            {% endif %}
+                                                            {% if inc.status=='Resolved' %}
+                                                            <option value="Resolved" selected>Resolved</option>
+                                                            {% else %}
+                                                            <option value="Resolved">Resolved</option>
+                                                            {% endif %}
                                                         </select>
-                                                        <button type="submit" class="btn btn-primary"
-                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                        <button type="submit" class="btn btn-primary status-update-btn">Update</button>
                                                     </form>
                                                     <form action="{{ url_for('delete_incident', incident_id=inc.id) }}"
                                                         method="POST"
                                                         onsubmit="return confirm('Delete this incident?');"
-                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        class="form-inline-block">
                                                         <button type="submit" class="btn-icon text-danger"
-                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                            title="Delete" aria-label="Delete Incident"><i class="fas fa-trash"></i></button>
                                                     </form>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="5" style="text-align:center">No incidents reported.</td>
+                                                <td colspan="5" class="text-center">No incidents reported.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -459,26 +488,26 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Requester</th>
-                                                <th>Resource Details</th>
-                                                <th>Urgency</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
+                                                <th scope="col">Requester</th>
+                                                <th scope="col">Resource Details</th>
+                                                <th scope="col">Urgency</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for req in resource_requests %}
                                             <tr>
                                                 <td>
-                                                    <div style="font-weight:600">{{ req.requester_name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="fw-semibold">{{ req.requester_name }}</div>
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-address-book"></i> {{ req.contact_info }}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div style="font-weight:500">{{ req.resource_type }} ({{
+                                                    <div class="fw-medium">{{ req.resource_type }} ({{
                                                         req.quantity }})</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-map-marker-alt"></i> {{ req.location }}</div>
                                                 </td>
                                                 <td>
@@ -486,8 +515,7 @@
                                                     <span class="status-badge status-danger"><i
                                                             class="fas fa-exclamation-triangle"></i> High</span>
                                                     {% else %}
-                                                    <span class="status-badge"
-                                                        style="background:#f1f5f9;color:var(--text-muted)">{{
+                                                    <span class="status-badge status-badge-gray">{{
                                                         req.urgency }}</span>
                                                     {% endif %}
                                                 </td>
@@ -503,33 +531,43 @@
                                                     <form
                                                         action="{{ url_for('update_resource_request', request_id=req.id) }}"
                                                         method="POST"
-                                                        style="display:inline-flex; align-items:center; gap:0.5rem;">
-                                                        <select name="status" class="form-control"
-                                                            style="width:auto; padding:0.25rem; font-size:0.8rem;">
-                                                            <option value="Pending" {% if req.status=='Pending'
-                                                                %}selected{% endif %}>Pending</option>
-                                                            <option value="In Progress" {% if req.status=='In Progress'
-                                                                %}selected{% endif %}>In Progress</option>
-                                                            <option value="Fulfilled" {% if req.status=='Fulfilled'
-                                                                %}selected{% endif %}>Fulfilled</option>
-                                                            <option value="Rejected" {% if req.status=='Rejected'
-                                                                %}selected{% endif %}>Rejected</option>
+                                                        class="incident-form-inline">
+                                                        <select name="status" class="form-control status-select-inline">
+                                                            {% if req.status=='Pending' %}
+                                                            <option value="Pending" selected>Pending</option>
+                                                            {% else %}
+                                                            <option value="Pending">Pending</option>
+                                                            {% endif %}
+                                                            {% if req.status=='In Progress' %}
+                                                            <option value="In Progress" selected>In Progress</option>
+                                                            {% else %}
+                                                            <option value="In Progress">In Progress</option>
+                                                            {% endif %}
+                                                            {% if req.status=='Fulfilled' %}
+                                                            <option value="Fulfilled" selected>Fulfilled</option>
+                                                            {% else %}
+                                                            <option value="Fulfilled">Fulfilled</option>
+                                                            {% endif %}
+                                                            {% if req.status=='Rejected' %}
+                                                            <option value="Rejected" selected>Rejected</option>
+                                                            {% else %}
+                                                            <option value="Rejected">Rejected</option>
+                                                            {% endif %}
                                                         </select>
-                                                        <button type="submit" class="btn btn-primary"
-                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                        <button type="submit" class="btn btn-primary status-update-btn">Update</button>
                                                     </form>
                                                     <form
                                                         action="{{ url_for('delete_resource_request', request_id=req.id) }}"
                                                         method="POST" onsubmit="return confirm('Delete this request?');"
-                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        class="form-inline-block">
                                                         <button type="submit" class="btn-icon text-danger"
-                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                            title="Delete" aria-label="Delete Resource Request"><i class="fas fa-trash"></i></button>
                                                     </form>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="5" style="text-align:center">No resource requests.</td>
+                                                <td colspan="5" class="text-center">No resource requests.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -548,12 +586,12 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Photo</th>
-                                                <th>Person Details</th>
-                                                <th>Last Seen</th>
-                                                <th>Reporter</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Photo</th>
+                                                <th scope="col">Person Details</th>
+                                                <th scope="col">Last Seen</th>
+                                                <th scope="col">Reporter</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -564,25 +602,24 @@
                                                     <img src="{{ url_for('static', filename='uploads/' + report.photo) }}"
                                                         alt="Photo" class="avatar-img">
                                                     {% else %}
-                                                    <div class="avatar-img"
-                                                        style="background:#e2e8f0;display:flex;align-items:center;justify-content:center">
+                                                    <div class="avatar-img avatar-img-fallback">
                                                         <i class="fas fa-user text-muted"></i></div>
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    <div style="font-weight:600;color:var(--danger)">{{
+                                                    <div class="text-danger-semibold">{{
                                                         report.person_name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ report.age
+                                                    <div class="text-muted-xs">{{ report.age
                                                         or '?' }} yrs / {{ report.gender or '-' }}</div>
                                                 </td>
                                                 <td>
                                                     <div>{{ report.last_known_location }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{
+                                                    <div class="text-muted-xs">{{
                                                         report.date_last_seen or '-' }}</div>
                                                 </td>
                                                 <td>
-                                                    <div style="font-weight:500">{{ report.reporter_name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="fw-medium">{{ report.reporter_name }}</div>
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-phone"></i> {{ report.reporter_contact }}
                                                     </div>
                                                 </td>
@@ -600,7 +637,7 @@
                                                             action="{{ url_for('approve_report', report_id=report.id) }}"
                                                             method="post">
                                                             <button type="submit" class="btn-icon text-success"
-                                                                title="Approve"><i class="fas fa-check"></i></button>
+                                                                title="Approve" aria-label="Approve Missing Report"><i class="fas fa-check"></i></button>
                                                         </form>
                                                         {% endif %}
                                                         <form
@@ -608,15 +645,14 @@
                                                             method="post"
                                                             onsubmit="return confirm('Delete this report?');">
                                                             <button type="submit" class="btn-icon text-danger"
-                                                                title="Delete"><i class="fas fa-trash"></i></button>
+                                                                title="Delete" aria-label="Delete Missing Report"><i class="fas fa-trash"></i></button>
                                                         </form>
                                                     </div>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="6" style="text-align:center">No missing person reports.
-                                                </td>
+                                                <td colspan="6" class="text-center">No missing person reports.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -635,12 +671,12 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Photo</th>
-                                                <th>Sighting Info</th>
-                                                <th>Details</th>
-                                                <th>Contact Info</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Photo</th>
+                                                <th scope="col">Sighting Info</th>
+                                                <th scope="col">Details</th>
+                                                <th scope="col">Contact Info</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -651,26 +687,22 @@
                                                     <img src="{{ url_for('static', filename='uploads/' + s.photo) }}"
                                                         alt="Photo" class="avatar-img">
                                                     {% else %}
-                                                    <div class="avatar-img"
-                                                        style="background:#e2e8f0;display:flex;align-items:center;justify-content:center">
+                                                    <div class="avatar-img avatar-img-fallback">
                                                         <i class="fas fa-camera-slash text-muted"></i></div>
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    <div style="font-weight:600;color:var(--info)">{{ s.person_name }}
-                                                    </div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="text-info-semibold">{{ s.person_name }}</div>
+                                                    <div class="text-muted-xs"><i
                                                             class="far fa-clock"></i> {{ s.date_time }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)"><i
+                                                    <div class="text-muted-xs"><i
                                                             class="fas fa-map-marker-alt"></i> {{ s.location }}</div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        style="font-size:0.85rem; max-width: 250px; white-space: normal;">
-                                                        {{ s.details }}</div>
+                                                    <div class="sighting-details">{{ s.details }}</div>
                                                 </td>
                                                 <td>
-                                                    <div style="font-size:0.85rem;"><i class="fas fa-phone"></i> {{
+                                                    <div class="font-sm"><i class="fas fa-phone"></i> {{
                                                         s.contact_info }}</div>
                                                 </td>
                                                 <td>
@@ -683,32 +715,38 @@
                                                 <td>
                                                     <form action="{{ url_for('update_sighting', sighting_id=s.id) }}"
                                                         method="POST"
-                                                        style="display:inline-block; margin-bottom: 0.25rem;">
-                                                        <select name="status" class="form-control"
-                                                            style="padding:0.25rem; font-size:0.8rem; display:inline-block; width:auto; border-radius:4px;">
-                                                            <option value="Pending Review" {% if
-                                                                s.status=='Pending Review' %}selected{% endif %}>Pending
-                                                                Review</option>
-                                                            <option value="Verified" {% if s.status=='Verified'
-                                                                %}selected{% endif %}>Verified</option>
-                                                            <option value="Dismissed" {% if s.status=='Dismissed'
-                                                                %}selected{% endif %}>Dismissed</option>
+                                                        class="form-inline-block-margin">
+                                                        <select name="status" class="form-control status-select-inline">
+                                                            {% if s.status=='Pending Review' %}
+                                                            <option value="Pending Review" selected>Pending Review</option>
+                                                            {% else %}
+                                                            <option value="Pending Review">Pending Review</option>
+                                                            {% endif %}
+                                                            {% if s.status=='Verified' %}
+                                                            <option value="Verified" selected>Verified</option>
+                                                            {% else %}
+                                                            <option value="Verified">Verified</option>
+                                                            {% endif %}
+                                                            {% if s.status=='Dismissed' %}
+                                                            <option value="Dismissed" selected>Dismissed</option>
+                                                            {% else %}
+                                                            <option value="Dismissed">Dismissed</option>
+                                                            {% endif %}
                                                         </select>
-                                                        <button type="submit" class="btn btn-primary"
-                                                            style="padding:0.25rem 0.5rem; font-size:0.8rem;">Update</button>
+                                                        <button type="submit" class="btn btn-primary status-update-btn">Update</button>
                                                     </form>
                                                     <form action="{{ url_for('delete_sighting', sighting_id=s.id) }}"
                                                         method="POST"
                                                         onsubmit="return confirm('Delete this sighting report?');"
-                                                        style="display:inline-block; margin-left:0.25rem;">
+                                                        class="form-inline-block">
                                                         <button type="submit" class="btn-icon text-danger"
-                                                            title="Delete"><i class="fas fa-trash"></i></button>
+                                                            title="Delete" aria-label="Delete Sighting"><i class="fas fa-trash"></i></button>
                                                     </form>
                                                 </td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="6" style="text-align:center">No reported sightings.</td>
+                                                <td colspan="6" class="text-center">No reported sightings.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -735,28 +773,28 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Product</th>
-                                                <th>Amount</th>
-                                                <th>Customer</th>
-                                                <th>Date</th>
+                                                <th scope="col">Product</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for order in orders %}
                                             <tr>
-                                                <td style="font-weight:500">{{ order.product_name }}</td>
-                                                <td style="font-weight:600">₹{{ order.price }}</td>
+                                                <td class="fw-medium">{{ order.product_name }}</td>
+                                                <td class="fw-semibold">₹{{ order.price }}</td>
                                                 <td>
                                                     <div>{{ order.customer_name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{
+                                                    <div class="text-muted-xs">{{
                                                         order.contact_info }}</div>
                                                 </td>
-                                                <td style="font-size:0.75rem;color:var(--text-muted)">{{ order.timestamp
+                                                <td class="text-muted-xs">{{ order.timestamp
                                                     }}</td>
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="4" style="text-align:center">No orders.</td>
+                                                <td colspan="4" class="text-center">No orders.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -783,30 +821,28 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Sender</th>
-                                                <th>Subject</th>
-                                                <th>Message</th>
-                                                <th>Action</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Sender</th>
+                                                <th scope="col">Subject</th>
+                                                <th scope="col">Message</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for msg in contact_messages %}
                                             <tr>
-                                                <td
-                                                    style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap">
+                                                <td class="text-muted-xs-nowrap">
                                                     {{ msg.timestamp }}</td>
                                                 <td>
-                                                    <div style="font-weight:500">{{ msg.name }}</div>
-                                                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ msg.email
+                                                    <div class="fw-medium">{{ msg.name }}</div>
+                                                    <div class="text-muted-xs">{{ msg.email
                                                         }}</div>
                                                 </td>
-                                                <td><span class="status-badge"
-                                                        style="background:#e2e8f0;color:var(--text-main)">{{ msg.subject
+                                                <td><span class="status-badge subject-badge">{{ msg.subject
                                                         }}</span></td>
                                                 <td class="truncate" title="{{ msg.message }}">{{ msg.message }}</td>
                                                 <td>
-                                                    <button class="btn btn-outline" style="padding:0.25rem 0.75rem;font-size:0.75rem"
+                                                    <button class="btn btn-outline reply-btn"
                                                             data-email="{{ msg.email }}" 
                                                             data-subject="{{ msg.subject }}"
                                                             onclick="openReplyModal(this)">
@@ -816,7 +852,7 @@
                                             </tr>
                                             {% else %}
                                             <tr>
-                                                <td colspan="5" style="text-align:center">No contact messages.</td>
+                                                <td colspan="5" class="text-center">No contact messages.</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -831,23 +867,23 @@
         </main>
 
         <!-- Reply Modal -->
-        <div id="replyModal" class="modal-overlay" style="display: none;">
+        <div id="replyModal" class="modal-overlay modal-overlay-custom">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2><i class="fas fa-reply"></i> Reply to Message</h2>
-                    <button class="close-btn" onclick="closeReplyModal()">&times;</button>
+                    <button class="close-btn" onclick="closeReplyModal()" aria-label="Close reply modal">&times;</button>
                 </div>
                 <form action="{{ url_for('reply_message') }}" method="POST">
                     <div class="modal-body">
                         <input type="hidden" name="email" id="replyEmail">
                         <input type="hidden" name="subject" id="replySubject">
-                        <div class="form-group" style="margin-bottom: 1rem;">
-                            <label class="form-label" style="color: var(--text-muted);">To:</label>
-                            <div id="replyEmailDisplay" style="font-weight: 500;"></div>
+                        <div class="form-group modal-form-group-margin">
+                            <label class="form-label modal-form-label-muted">To:</label>
+                            <div id="replyEmailDisplay" class="fw-medium"></div>
                         </div>
-                        <div class="form-group" style="margin-bottom: 1rem;">
-                            <label class="form-label" style="color: var(--text-muted);">Subject:</label>
-                            <div id="replySubjectDisplay" style="font-weight: 500;"></div>
+                        <div class="form-group modal-form-group-margin">
+                            <label class="form-label modal-form-label-muted">Subject:</label>
+                            <div id="replySubjectDisplay" class="fw-medium"></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Message:</label>
